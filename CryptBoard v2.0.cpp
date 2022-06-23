@@ -1,5 +1,6 @@
 #include <Adafruit_TFTLCD.h>
 #include <Adafruit_GFX.h>
+#include <MCUFRIEND_kbv.h>
 #include <gfxfont.h>
 #include <stdint.h>
 #include "TouchScreen.h"
@@ -28,7 +29,7 @@
 #define XM A1
 #define YM 6
 
-Adafruit_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);
+MCUFRIEND_kbv tft;
 TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);
 TSPoint p;
 
@@ -693,7 +694,6 @@ void CypherMenuWiki()
   pinMode(A2, OUTPUT);
   
   tft.fillScreen(CYAN);
-  tft.setRotation(2);
   tft.fillRect(30, 10, 80, 80, RED);
   tft.fillRect(130, 10, 80, 80, RED);
   tft.fillRect(30, 110, 80, 80, RED);
@@ -730,30 +730,37 @@ void CypherMenuWiki()
       if(p.x >= 720 && p.x <= 895 && p.y >= 870 && p.y <= 915)
       {
         MainMenu();
+        break;
       }
-     /** else if(p.x >= 230 && p.x <= 485 && p.y >= 175 && p.y <= 380)
+      else if(p.x >= 230 && p.x <= 485 && p.y >= 175 && p.y <= 380)
       {
         MorseWiki();
+        break;
       }
       else if(p.x >= 560 && p.x <= 835 && p.y >= 175 && p.y <= 380)
       {
         CesarWiki();
-      } **/
+        break;
+      }
       else if(p.x >= 230 && p.x <= 485 && p.y >= 420 && p.y <= 615)
       {
         HexWiki();
+        break;
       }
       else if(p.x >= 560 && p.x <= 835 && p.y >= 420 && p.y <= 615)
       {
         BinaryWiki();
+        break;
       }
       else if(p.x >= 230 && p.x <= 485 && p.y >= 670 && p.y <= 865)
       {
         VigenereWiki();
+        break;
       }
       else if(p.x >= 560 && p.x <= 835 && p.y >= 670 && p.y <= 865)
       {
         AtbashWiki();
+        break;
       }
       
     
@@ -768,7 +775,6 @@ void CypherMenuWork()
   pinMode(A2, OUTPUT);
   
   tft.fillScreen(CYAN);
-  tft.setRotation(2);
   tft.fillRect(30, 10, 80, 80, RED);
   tft.fillRect(130, 10, 80, 80, RED);
   tft.fillRect(30, 110, 80, 80, RED);
@@ -803,7 +809,7 @@ void CypherMenuPlay()
   pinMode(A2, OUTPUT);
   
   tft.fillScreen(CYAN);
-  tft.setRotation(2);
+  ;
   tft.fillRect(30, 10, 80, 80, RED);
   tft.fillRect(130, 10, 80, 80, RED);
   tft.fillRect(30, 110, 80, 80, RED);
@@ -843,8 +849,9 @@ void Play()
       if(p.x >= 720 && p.x <= 895 && p.y >= 870 && p.y <= 915)
       {
         MainMenu();
+        break;
       }
-      break;
+      
     }
   }
 }
@@ -861,8 +868,9 @@ void Work()
       if(p.x >= 720 && p.x <= 895 && p.y >= 870 && p.y <= 915)
       {
         MainMenu();
+        break;
       }
-      break;
+      
     }
   }
 }
@@ -878,7 +886,7 @@ void MainMenu()
   pinMode(A2, OUTPUT);
   
   tft.fillScreen(RED);
-  tft.setRotation(2);
+  tft.setRotation(4);
   tft.fillCircle(120, 50, 45, BLUE);
   tft.setCursor(97, 45);
   tft.setTextColor(GREEN);
@@ -907,16 +915,19 @@ void MainMenu()
       if(p.x >= 390 && p.x <= 700 && p.y >= 160 && p.y <= 380)
       {
         Play();
+        break;
       }
       else if(p.x >= 390 && p.x <= 700 && p.y >= 430 && p.y <= 650)
       {
         Work();
+        break;
       }
       else if(p.x >= 390 && p.x <= 700 && p.y >= 690 && p.y <= 920)
       {
         Wiki();
+        break;
       }
-      break;
+      
     }
   }
 }
@@ -972,9 +983,9 @@ void Intro()
 
 void setup() {
   tft.reset();
-  tft.begin(0x8357);
+  tft.begin(0xE300);
   tft.fillScreen(BLACK);
-  tft.setRotation(2);
+  tft.setRotation(4);
   Serial.begin(9600);
   Intro();
 }
