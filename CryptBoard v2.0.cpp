@@ -769,6 +769,10 @@ void CypherMenuWiki()
   }
 }
 
+char sir[100], cheie[100];
+int mode = 1, len, len_key;
+bool isKey = true;
+
 void CypherMenuWork()
 {
 
@@ -808,7 +812,7 @@ void CypherMenuWork()
     p = ts.getPoint();
     if (p.z > ts.pressureThreshhold) 
     {
-      printCoord();
+      
       if(p.x >= 720 && p.x <= 895 && p.y >= 870 && p.y <= 915)
       {
         MainMenu();
@@ -1094,7 +1098,7 @@ void tast_cif_simb()
   tft.drawRect(45, 275, 100, 30, YELLOW);
 }
 
-void afisare_sir(char *sir)
+void afisare_sir()
 {
   pinMode(A1, OUTPUT);
   pinMode(A2, OUTPUT);
@@ -1104,14 +1108,14 @@ void afisare_sir(char *sir)
   tft.print(sir);
 }
 
-void displayChar(char x, char *sir, int &len)
+void displayChar(char x)
 {
   pinMode(A1, OUTPUT);
   pinMode(A2, OUTPUT);
   tft.setTextColor(RED);
   tft.setTextSize(2);
   sir[len++] = x;
-  afisare_sir(sir);
+  afisare_sir();
       
 }
 
@@ -1123,7 +1127,7 @@ void textbox()
   tft.fillRect(0, 40, 239, 130, WHITE);
 }
 
-void MorseEncrypt(char *sir)
+void MorseEncrypt()
 {
   String result[100] = "";
   textbox();
@@ -1173,7 +1177,7 @@ void MorseEncrypt(char *sir)
     
 }
 
-void error_message(String mesaj, char *sir)
+void error_message()
 {
   pinMode(A1, OUTPUT);
   pinMode(A2, OUTPUT);
@@ -1182,7 +1186,7 @@ void error_message(String mesaj, char *sir)
   tft.setCursor(5, 45);
   tft.setTextSize(2);
   tft.setTextColor(WHITE);
-  tft.print(mesaj);
+  tft.print("Caracter neacceptat");
 
   tft.fillRect(85, 135, 70, 30, GRAY);
   tft.setCursor(107, 143);
@@ -1203,7 +1207,7 @@ void error_message(String mesaj, char *sir)
       if(p.x >= 420 && p.x <= 650 && p.y >= 490 && p.y <= 555)
       {
         textbox();
-        afisare_sir(sir);
+        afisare_sir();
         break;
       }
     }
@@ -1211,11 +1215,21 @@ void error_message(String mesaj, char *sir)
   }
 }
 
+void resetString()
+{
+  for(int i = 0; i < len; i++)
+    sir[i] = 0;
+  for(int i = 0; i < len_key; i++)
+    cheie[i] = 0;
+  len = 0;
+  len_key = 0;
+  mode = 1;
+  isKey = true;
+}
+
 void GetTasteMorseEncrypt()
 {
-  char sir[1000] = "";
-  int len = 0;
-  int mode = 1;
+  resetString();
   while(1)
   {
     
@@ -1235,12 +1249,12 @@ void GetTasteMorseEncrypt()
             textbox();
             len--;
             sir[len] = 0;
-            afisare_sir(sir);
+            afisare_sir();
           }
        else if(p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
        {
           Serial.print("OK");
-          MorseEncrypt(sir);
+          MorseEncrypt();
           break;
        }
         
@@ -1252,68 +1266,68 @@ void GetTasteMorseEncrypt()
         
        }
        else if(p.x >= 280 && p.x <= 595 && p.y >= 830 && p.y <= 895)
-        displayChar(' ', sir, len);
+        displayChar(' ');
        else if(p.y >= 600 && p.y <= 660)
        {
          if(p.x >= 190 && p.x <= 240)
-          displayChar('Q', sir, len);
+          displayChar('Q');
          else if(p.x >= 245 && p.x <= 295)
-         displayChar('W', sir, len);
+         displayChar('W');
          else if(p.x >= 300 && p.x <= 350)
-         displayChar('E', sir, len);
+         displayChar('E');
          else if(p.x >= 355 && p.x <= 405)
-         displayChar('R', sir, len);
+         displayChar('R');
          else if(p.x >= 410 && p.x <= 460)
-         displayChar('T', sir, len);
+         displayChar('T');
          else if(p.x >= 465 && p.x <= 515)
-         displayChar('Y', sir, len);
+         displayChar('Y');
          else if(p.x >= 520 && p.x <= 570)
-         displayChar('U', sir, len);
+         displayChar('U');
          else if(p.x >= 575 && p.x <= 625)
-         displayChar('I', sir, len);
+         displayChar('I');
          else if(p.x >= 630 && p.x <= 680)
-         displayChar('O', sir, len);
+         displayChar('O');
          else if(p.x >= 685 && p.x <= 735)
-         displayChar('P', sir, len);
+         displayChar('P');
          
        }
        else if(p.y >= 670 && p.y <= 730)
        {
         if(p.x >= 220 && p.x <= 270)
-        displayChar('A', sir, len);
+        displayChar('A');
         else if(p.x >= 275 && p.x <= 325)
-        displayChar('S', sir, len);
+        displayChar('S');
         else if(p.x >= 330 && p.x <= 380)
-        displayChar('D', sir, len);
+        displayChar('D');
         else if(p.x >= 385 && p.x <= 435)
-        displayChar('F', sir, len);
+        displayChar('F');
         else if(p.x >= 440 && p.x <= 490)
-        displayChar('G', sir, len);
+        displayChar('G');
         else if(p.x >= 495 && p.x <= 545)
-        displayChar('H', sir, len);
+        displayChar('H');
         else if(p.x >= 550 && p.x <= 600)
-        displayChar('J', sir, len);
+        displayChar('J');
         else if(p.x >= 605 && p.x <= 655)
-        displayChar('K', sir, len);
+        displayChar('K');
         else if(p.x >= 660 && p.x <= 710)
-        displayChar('L', sir, len);
+        displayChar('L');
        }
        else if(p.y >= 740 && p.y <= 800)
        {
         if(p.x >= 250 && p.x <= 300)
-        displayChar('Z', sir, len);
+        displayChar('Z');
         else if(p.x >= 305 && p.x <= 355)
-        displayChar('X', sir, len);
+        displayChar('X');
         else if(p.x >= 360 && p.x <= 410)
-        displayChar('C', sir, len);
+        displayChar('C');
         else if(p.x >= 415 && p.x <= 465)
-        displayChar('V', sir, len);
+        displayChar('V');
         else if(p.x >= 470 && p.x <= 520)
-        displayChar('B', sir, len);
+        displayChar('B');
         else if(p.x >= 525 && p.x <= 575)
-        displayChar('N', sir, len);
+        displayChar('N');
         else if(p.x >= 580 && p.x <= 630)
-        displayChar('M', sir, len);
+        displayChar('M');
        }
        
      }
@@ -1324,13 +1338,13 @@ void GetTasteMorseEncrypt()
             textbox();
             len--;
             sir[len] = 0;
-            afisare_sir(sir);
+            afisare_sir();
         }
        else if(p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
        {
           Serial.print("OK");
           sir[len] = 0;
-          MorseEncrypt(sir);
+          MorseEncrypt();
           break;
        }
        else if(p.x >= 770 && p.x <= 895 && p.y >= 745 && p.y <= 805)
@@ -1339,85 +1353,85 @@ void GetTasteMorseEncrypt()
         tast_litere();
        }
        else if(p.x >= 280 && p.x <= 595 && p.y >= 830 && p.y <= 895)
-        displayChar(' ', sir, len);
+        displayChar(' ');
        else if(p.y >= 600 && p.y <= 660)
        {
          if(p.x >= 190 && p.x <= 240)
-          displayChar('1', sir, len);
+          displayChar('1');
          else if(p.x >= 245 && p.x <= 295)
-         displayChar('2', sir, len);
+         displayChar('2');
          else if(p.x >= 300 && p.x <= 350)
-         displayChar('3', sir, len);
+         displayChar('3');
          else if(p.x >= 355 && p.x <= 405)
-         displayChar('4', sir, len);
+         displayChar('4');
          else if(p.x >= 410 && p.x <= 460)
-         displayChar('5', sir, len);
+         displayChar('5');
          else if(p.x >= 465 && p.x <= 515)
-         displayChar('6', sir, len);
+         displayChar('6');
          else if(p.x >= 520 && p.x <= 570)
-         displayChar('7', sir, len);
+         displayChar('7');
          else if(p.x >= 575 && p.x <= 625)
-         displayChar('8', sir, len);
+         displayChar('8');
          else if(p.x >= 630 && p.x <= 680)
-         displayChar('9', sir, len);
+         displayChar('9');
          else if(p.x >= 685 && p.x <= 735)
-         displayChar('0', sir, len);
+         displayChar('0');
          
        }
        else if(p.y >= 670 && p.y <= 730)
        {
          if(p.x >= 190 && p.x <= 240)
-          displayChar('@', sir, len);
+          displayChar('@');
          else if(p.x >= 245 && p.x <= 295)
-         displayChar('.', sir, len);
+         displayChar('.');
          else if(p.x >= 300 && p.x <= 350)
-         displayChar('$', sir, len);
+         displayChar('$');
          else if(p.x >= 355 && p.x <= 405)
-         displayChar('_', sir, len);
+         displayChar('_');
          else if(p.x >= 410 && p.x <= 460)
-         displayChar('&', sir, len);
+         displayChar('&');
          else if(p.x >= 465 && p.x <= 515)
-         displayChar('-', sir, len);
+         displayChar('-');
          else if(p.x >= 520 && p.x <= 570)
-         displayChar('+', sir, len);
+         displayChar('+');
          else if(p.x >= 575 && p.x <= 625)
-         displayChar('(', sir, len);
+         displayChar('(');
          else if(p.x >= 630 && p.x <= 680)
-         displayChar(')', sir, len);
+         displayChar(')');
          else if(p.x >= 685 && p.x <= 735)
-         displayChar('/', sir, len);
+         displayChar('/');
         
        }  
        else if(p.y >= 740 && p.y <= 800)
        {
         if(p.x >= 190 && p.x <= 240)
-          error_message("Caracter neacceptat", sir);
+          error_message();
          else if(p.x >= 245 && p.x <= 295)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 300 && p.x <= 350)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 355 && p.x <= 405)
-         displayChar(':', sir, len);
+         displayChar(':');
          else if(p.x >= 410 && p.x <= 460)
-         displayChar(';', sir, len);
+         displayChar(';');
          else if(p.x >= 465 && p.x <= 515)
-         displayChar('!', sir, len);
+         displayChar('!');
          else if(p.x >= 520 && p.x <= 570)
-         displayChar('?', sir, len);
+         displayChar('?');
          else if(p.x >= 575 && p.x <= 625)
-         displayChar('=', sir, len);
+         displayChar('=');
          else if(p.x >= 630 && p.x <= 680)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 685 && p.x <= 735)
-         error_message("Caracter neacceptat", sir);
+         error_message();
        }
        else if(p.y >= 810 && p.y <= 870)
        {
          if(p.x >= 190 && p.x <= 240)
-          displayChar(',', sir, len);
+          displayChar(',');
          else if(p.x >= 630 && p.x <= 680)
          {
-          error_message("Caracter neacceptat", sir);
+          error_message();
          }
        }
        
@@ -1591,9 +1605,9 @@ void TastMorseDecrypt()
   
 }
 
-void MorseDecrypt(char *sir)
+void MorseDecrypt()
 {
-  char result[500];
+  char result[50];
   int k = 0;
   char *tok = strtok(sir, " ");
   while(tok)
@@ -1625,8 +1639,7 @@ void MorseDecrypt(char *sir)
 
 void GetTasteMorseDecrypt()
 {
-  char sir[1000] = "";
-  int len = 0;
+  resetString();
   while(1)
   {
     
@@ -1643,23 +1656,23 @@ void GetTasteMorseDecrypt()
             textbox();
             len--;
             sir[len] = 0;
-            afisare_sir(sir);
+            afisare_sir();
      }
      else if(p.y >= 580 && p.y <= 810)
      {
         if(p.x >= 180 && p.x <= 340)
-          displayChar('.', sir, len);
+          displayChar('.');
         else if(p.x >= 360 && p.x <= 545)
-          displayChar('-', sir, len);
+          displayChar('-');
         else if(p.x >= 550 && p.x <= 750)
-          displayChar('/', sir, len);
+          displayChar('/');
      }
      else if(p.x >= 280 && p.x <= 595 && p.y >= 830 && p.y <= 895)
-        displayChar(' ', sir, len);
+        displayChar(' ');
      else if(p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
        {
           sir[len] = 0;
-          MorseDecrypt(sir);
+          MorseDecrypt();
           break;
        }
      
@@ -1678,7 +1691,7 @@ int litera(char c)
     return c >= 'A' && c <= 'Z';
 }
 
-void CesarEncrypt(char *sir)
+void CesarEncrypt()
 {
   
     for(int i = 0; sir[i] != 0; i++)
@@ -1687,7 +1700,7 @@ void CesarEncrypt(char *sir)
            sir[i] = (sir[i] + 3 - 'A') % 26 + 'A';
     }
     textbox();
-    afisare_sir(sir);
+    afisare_sir();
 
     while(1)
   {
@@ -1704,7 +1717,7 @@ void CesarEncrypt(char *sir)
   }
 }
 
-void CesarDecrypt(char *sir)
+void CesarDecrypt()
 {
    
     for(int i = 0; sir[i] != 0; i++)
@@ -1713,7 +1726,7 @@ void CesarDecrypt(char *sir)
            sir[i] = (sir[i] - 3 - 'A') % 26 + 'A';
     }
     textbox();
-    afisare_sir(sir);
+    afisare_sir();
 
     while(1)
   {
@@ -1732,9 +1745,7 @@ void CesarDecrypt(char *sir)
 
 void GetTasteCesarEncrypt()
 {
-  char sir[1000] = "";
-  int len = 0;
-  int mode = 1;
+  resetString();
   while(1)
   {
     
@@ -1754,12 +1765,12 @@ void GetTasteCesarEncrypt()
             textbox();
             len--;
             sir[len] = 0;
-            afisare_sir(sir);
+            afisare_sir();
           }
        else if(p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
        {
         sir[len] = 0;
-          CesarEncrypt(sir);
+          CesarEncrypt();
           break;
        }
         
@@ -1771,68 +1782,68 @@ void GetTasteCesarEncrypt()
         
        }
        else if(p.x >= 280 && p.x <= 595 && p.y >= 830 && p.y <= 895)
-        displayChar(' ', sir, len);
+        displayChar(' ');
        else if(p.y >= 600 && p.y <= 660)
        {
          if(p.x >= 190 && p.x <= 240)
-          displayChar('Q', sir, len);
+          displayChar('Q');
          else if(p.x >= 245 && p.x <= 295)
-         displayChar('W', sir, len);
+         displayChar('W');
          else if(p.x >= 300 && p.x <= 350)
-         displayChar('E', sir, len);
+         displayChar('E');
          else if(p.x >= 355 && p.x <= 405)
-         displayChar('R', sir, len);
+         displayChar('R');
          else if(p.x >= 410 && p.x <= 460)
-         displayChar('T', sir, len);
+         displayChar('T');
          else if(p.x >= 465 && p.x <= 515)
-         displayChar('Y', sir, len);
+         displayChar('Y');
          else if(p.x >= 520 && p.x <= 570)
-         displayChar('U', sir, len);
+         displayChar('U');
          else if(p.x >= 575 && p.x <= 625)
-         displayChar('I', sir, len);
+         displayChar('I');
          else if(p.x >= 630 && p.x <= 680)
-         displayChar('O', sir, len);
+         displayChar('O');
          else if(p.x >= 685 && p.x <= 735)
-         displayChar('P', sir, len);
+         displayChar('P');
          
        }
        else if(p.y >= 670 && p.y <= 730)
        {
         if(p.x >= 220 && p.x <= 270)
-        displayChar('A', sir, len);
+        displayChar('A');
         else if(p.x >= 275 && p.x <= 325)
-        displayChar('S', sir, len);
+        displayChar('S');
         else if(p.x >= 330 && p.x <= 380)
-        displayChar('D', sir, len);
+        displayChar('D');
         else if(p.x >= 385 && p.x <= 435)
-        displayChar('F', sir, len);
+        displayChar('F');
         else if(p.x >= 440 && p.x <= 490)
-        displayChar('G', sir, len);
+        displayChar('G');
         else if(p.x >= 495 && p.x <= 545)
-        displayChar('H', sir, len);
+        displayChar('H');
         else if(p.x >= 550 && p.x <= 600)
-        displayChar('J', sir, len);
+        displayChar('J');
         else if(p.x >= 605 && p.x <= 655)
-        displayChar('K', sir, len);
+        displayChar('K');
         else if(p.x >= 660 && p.x <= 710)
-        displayChar('L', sir, len);
+        displayChar('L');
        }
        else if(p.y >= 740 && p.y <= 800)
        {
         if(p.x >= 250 && p.x <= 300)
-        displayChar('Z', sir, len);
+        displayChar('Z');
         else if(p.x >= 305 && p.x <= 355)
-        displayChar('X', sir, len);
+        displayChar('X');
         else if(p.x >= 360 && p.x <= 410)
-        displayChar('C', sir, len);
+        displayChar('C');
         else if(p.x >= 415 && p.x <= 465)
-        displayChar('V', sir, len);
+        displayChar('V');
         else if(p.x >= 470 && p.x <= 520)
-        displayChar('B', sir, len);
+        displayChar('B');
         else if(p.x >= 525 && p.x <= 575)
-        displayChar('N', sir, len);
+        displayChar('N');
         else if(p.x >= 580 && p.x <= 630)
-        displayChar('M', sir, len);
+        displayChar('M');
        }
        
      }
@@ -1843,12 +1854,12 @@ void GetTasteCesarEncrypt()
             textbox();
             len--;
             sir[len] = 0;
-            afisare_sir(sir);
+            afisare_sir();
         }
        else if(p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
        {
         sir[len] = 0;
-          CesarEncrypt(sir);
+          CesarEncrypt();
           break;
        }
        else if(p.x >= 770 && p.x <= 895 && p.y >= 745 && p.y <= 805)
@@ -1857,85 +1868,85 @@ void GetTasteCesarEncrypt()
         tast_litere();
        }
        else if(p.x >= 280 && p.x <= 595 && p.y >= 830 && p.y <= 895)
-        displayChar(' ', sir, len);
+        displayChar(' ');
        else if(p.y >= 600 && p.y <= 660)
        {
          if(p.x >= 190 && p.x <= 240)
-          displayChar('1', sir, len);
+          displayChar('1');
          else if(p.x >= 245 && p.x <= 295)
-         displayChar('2', sir, len);
+         displayChar('2');
          else if(p.x >= 300 && p.x <= 350)
-         displayChar('3', sir, len);
+         displayChar('3');
          else if(p.x >= 355 && p.x <= 405)
-         displayChar('4', sir, len);
+         displayChar('4');
          else if(p.x >= 410 && p.x <= 460)
-         displayChar('5', sir, len);
+         displayChar('5');
          else if(p.x >= 465 && p.x <= 515)
-         displayChar('6', sir, len);
+         displayChar('6');
          else if(p.x >= 520 && p.x <= 570)
-         displayChar('7', sir, len);
+         displayChar('7');
          else if(p.x >= 575 && p.x <= 625)
-         displayChar('8', sir, len);
+         displayChar('8');
          else if(p.x >= 630 && p.x <= 680)
-         displayChar('9', sir, len);
+         displayChar('9');
          else if(p.x >= 685 && p.x <= 735)
-         displayChar('0', sir, len);
+         displayChar('0');
          
        }
        else if(p.y >= 670 && p.y <= 730)
        {
          if(p.x >= 190 && p.x <= 240)
-          displayChar('@', sir, len);
+          displayChar('@');
          else if(p.x >= 245 && p.x <= 295)
-         displayChar('.', sir, len);
+         displayChar('.');
          else if(p.x >= 300 && p.x <= 350)
-         displayChar('$', sir, len);
+         displayChar('$');
          else if(p.x >= 355 && p.x <= 405)
-         displayChar('_', sir, len);
+         displayChar('_');
          else if(p.x >= 410 && p.x <= 460)
-         displayChar('&', sir, len);
+         displayChar('&');
          else if(p.x >= 465 && p.x <= 515)
-         displayChar('-', sir, len);
+         displayChar('-');
          else if(p.x >= 520 && p.x <= 570)
-         displayChar('+', sir, len);
+         displayChar('+');
          else if(p.x >= 575 && p.x <= 625)
-         displayChar('(', sir, len);
+         displayChar('(');
          else if(p.x >= 630 && p.x <= 680)
-         displayChar(')', sir, len);
+         displayChar(')');
          else if(p.x >= 685 && p.x <= 735)
-         displayChar('/', sir, len);
+         displayChar('/');
         
        }  
        else if(p.y >= 740 && p.y <= 800)
        {
         if(p.x >= 190 && p.x <= 240)
-          displayChar('<', sir, len);
+          displayChar('<');
          else if(p.x >= 245 && p.x <= 295)
-         displayChar('*', sir, len);
+         displayChar('*');
          else if(p.x >= 300 && p.x <= 350)
-         displayChar('\'', sir, len);
+         displayChar('\'');
          else if(p.x >= 355 && p.x <= 405)
-         displayChar(':', sir, len);
+         displayChar(':');
          else if(p.x >= 410 && p.x <= 460)
-         displayChar(';', sir, len);
+         displayChar(';');
          else if(p.x >= 465 && p.x <= 515)
-         displayChar('!', sir, len);
+         displayChar('!');
          else if(p.x >= 520 && p.x <= 570)
-         displayChar('?', sir, len);
+         displayChar('?');
          else if(p.x >= 575 && p.x <= 625)
-         displayChar('=', sir, len);
+         displayChar('=');
          else if(p.x >= 630 && p.x <= 680)
-         displayChar('%', sir, len);
+         displayChar('%');
          else if(p.x >= 685 && p.x <= 735)
-         displayChar('>', sir, len);
+         displayChar('>');
        }
        else if(p.y >= 810 && p.y <= 870)
        {
          if(p.x >= 190 && p.x <= 240)
-          displayChar(',', sir, len);
+          displayChar(',');
          else if(p.x >= 630 && p.x <= 680)
          {
-          displayChar('\"', sir, len);
+          displayChar('\"');
          }
        }
        
@@ -1952,9 +1963,7 @@ void GetTasteCesarEncrypt()
 
 void GetTasteCesarDecrypt()
 {
-  char sir[1000] = "";
-  int len = 0;
-  int mode = 1;
+  resetString();
   while(1)
   {
     
@@ -1974,12 +1983,12 @@ void GetTasteCesarDecrypt()
             textbox();
             len--;
             sir[len] = 0;
-            afisare_sir(sir);
+            afisare_sir();
           }
        else if(p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
        {
         sir[len] = 0;
-          CesarDecrypt(sir);
+          CesarDecrypt();
           break;
        }
         
@@ -1991,68 +2000,68 @@ void GetTasteCesarDecrypt()
         
        }
        else if(p.x >= 280 && p.x <= 595 && p.y >= 830 && p.y <= 895)
-        displayChar(' ', sir, len);
+        displayChar(' ');
        else if(p.y >= 600 && p.y <= 660)
        {
          if(p.x >= 190 && p.x <= 240)
-          displayChar('Q', sir, len);
+          displayChar('Q');
          else if(p.x >= 245 && p.x <= 295)
-         displayChar('W', sir, len);
+         displayChar('W');
          else if(p.x >= 300 && p.x <= 350)
-         displayChar('E', sir, len);
+         displayChar('E');
          else if(p.x >= 355 && p.x <= 405)
-         displayChar('R', sir, len);
+         displayChar('R');
          else if(p.x >= 410 && p.x <= 460)
-         displayChar('T', sir, len);
+         displayChar('T');
          else if(p.x >= 465 && p.x <= 515)
-         displayChar('Y', sir, len);
+         displayChar('Y');
          else if(p.x >= 520 && p.x <= 570)
-         displayChar('U', sir, len);
+         displayChar('U');
          else if(p.x >= 575 && p.x <= 625)
-         displayChar('I', sir, len);
+         displayChar('I');
          else if(p.x >= 630 && p.x <= 680)
-         displayChar('O', sir, len);
+         displayChar('O');
          else if(p.x >= 685 && p.x <= 735)
-         displayChar('P', sir, len);
+         displayChar('P');
          
        }
        else if(p.y >= 670 && p.y <= 730)
        {
         if(p.x >= 220 && p.x <= 270)
-        displayChar('A', sir, len);
+        displayChar('A');
         else if(p.x >= 275 && p.x <= 325)
-        displayChar('S', sir, len);
+        displayChar('S');
         else if(p.x >= 330 && p.x <= 380)
-        displayChar('D', sir, len);
+        displayChar('D');
         else if(p.x >= 385 && p.x <= 435)
-        displayChar('F', sir, len);
+        displayChar('F');
         else if(p.x >= 440 && p.x <= 490)
-        displayChar('G', sir, len);
+        displayChar('G');
         else if(p.x >= 495 && p.x <= 545)
-        displayChar('H', sir, len);
+        displayChar('H');
         else if(p.x >= 550 && p.x <= 600)
-        displayChar('J', sir, len);
+        displayChar('J');
         else if(p.x >= 605 && p.x <= 655)
-        displayChar('K', sir, len);
+        displayChar('K');
         else if(p.x >= 660 && p.x <= 710)
-        displayChar('L', sir, len);
+        displayChar('L');
        }
        else if(p.y >= 740 && p.y <= 800)
        {
         if(p.x >= 250 && p.x <= 300)
-        displayChar('Z', sir, len);
+        displayChar('Z');
         else if(p.x >= 305 && p.x <= 355)
-        displayChar('X', sir, len);
+        displayChar('X');
         else if(p.x >= 360 && p.x <= 410)
-        displayChar('C', sir, len);
+        displayChar('C');
         else if(p.x >= 415 && p.x <= 465)
-        displayChar('V', sir, len);
+        displayChar('V');
         else if(p.x >= 470 && p.x <= 520)
-        displayChar('B', sir, len);
+        displayChar('B');
         else if(p.x >= 525 && p.x <= 575)
-        displayChar('N', sir, len);
+        displayChar('N');
         else if(p.x >= 580 && p.x <= 630)
-        displayChar('M', sir, len);
+        displayChar('M');
        }
        
      }
@@ -2063,12 +2072,12 @@ void GetTasteCesarDecrypt()
             textbox();
             len--;
             sir[len] = 0;
-            afisare_sir(sir);
+            afisare_sir();
         }
        else if(p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
        {
           sir[len] = 0;
-          CesarDecrypt(sir);
+          CesarDecrypt();
           break;
        }
        else if(p.x >= 770 && p.x <= 895 && p.y >= 745 && p.y <= 805)
@@ -2077,85 +2086,85 @@ void GetTasteCesarDecrypt()
         tast_litere();
        }
        else if(p.x >= 280 && p.x <= 595 && p.y >= 830 && p.y <= 895)
-        displayChar(' ', sir, len);
+        displayChar(' ');
        else if(p.y >= 600 && p.y <= 660)
        {
          if(p.x >= 190 && p.x <= 240)
-          displayChar('1', sir, len);
+          displayChar('1');
          else if(p.x >= 245 && p.x <= 295)
-         displayChar('2', sir, len);
+         displayChar('2');
          else if(p.x >= 300 && p.x <= 350)
-         displayChar('3', sir, len);
+         displayChar('3');
          else if(p.x >= 355 && p.x <= 405)
-         displayChar('4', sir, len);
+         displayChar('4');
          else if(p.x >= 410 && p.x <= 460)
-         displayChar('5', sir, len);
+         displayChar('5');
          else if(p.x >= 465 && p.x <= 515)
-         displayChar('6', sir, len);
+         displayChar('6');
          else if(p.x >= 520 && p.x <= 570)
-         displayChar('7', sir, len);
+         displayChar('7');
          else if(p.x >= 575 && p.x <= 625)
-         displayChar('8', sir, len);
+         displayChar('8');
          else if(p.x >= 630 && p.x <= 680)
-         displayChar('9', sir, len);
+         displayChar('9');
          else if(p.x >= 685 && p.x <= 735)
-         displayChar('0', sir, len);
+         displayChar('0');
          
        }
        else if(p.y >= 670 && p.y <= 730)
        {
          if(p.x >= 190 && p.x <= 240)
-          displayChar('@', sir, len);
+          displayChar('@');
          else if(p.x >= 245 && p.x <= 295)
-         displayChar('.', sir, len);
+         displayChar('.');
          else if(p.x >= 300 && p.x <= 350)
-         displayChar('$', sir, len);
+         displayChar('$');
          else if(p.x >= 355 && p.x <= 405)
-         displayChar('_', sir, len);
+         displayChar('_');
          else if(p.x >= 410 && p.x <= 460)
-         displayChar('&', sir, len);
+         displayChar('&');
          else if(p.x >= 465 && p.x <= 515)
-         displayChar('-', sir, len);
+         displayChar('-');
          else if(p.x >= 520 && p.x <= 570)
-         displayChar('+', sir, len);
+         displayChar('+');
          else if(p.x >= 575 && p.x <= 625)
-         displayChar('(', sir, len);
+         displayChar('(');
          else if(p.x >= 630 && p.x <= 680)
-         displayChar(')', sir, len);
+         displayChar(')');
          else if(p.x >= 685 && p.x <= 735)
-         displayChar('/', sir, len);
+         displayChar('/');
         
        }  
        else if(p.y >= 740 && p.y <= 800)
        {
         if(p.x >= 190 && p.x <= 240)
-          displayChar('<', sir, len);
+          displayChar('<');
          else if(p.x >= 245 && p.x <= 295)
-         displayChar('*', sir, len);
+         displayChar('*');
          else if(p.x >= 300 && p.x <= 350)
-         displayChar('\'', sir, len);
+         displayChar('\'');
          else if(p.x >= 355 && p.x <= 405)
-         displayChar(':', sir, len);
+         displayChar(':');
          else if(p.x >= 410 && p.x <= 460)
-         displayChar(';', sir, len);
+         displayChar(';');
          else if(p.x >= 465 && p.x <= 515)
-         displayChar('!', sir, len);
+         displayChar('!');
          else if(p.x >= 520 && p.x <= 570)
-         displayChar('?', sir, len);
+         displayChar('?');
          else if(p.x >= 575 && p.x <= 625)
-         displayChar('=', sir, len);
+         displayChar('=');
          else if(p.x >= 630 && p.x <= 680)
-         displayChar('%', sir, len);
+         displayChar('%');
          else if(p.x >= 685 && p.x <= 735)
-         displayChar('>', sir, len);
+         displayChar('>');
        }
        else if(p.y >= 810 && p.y <= 870)
        {
          if(p.x >= 190 && p.x <= 240)
-          displayChar(',', sir, len);
+          displayChar(',');
          else if(p.x >= 630 && p.x <= 680)
          {
-          displayChar('\"', sir, len);
+          displayChar('\"');
          }
        }
        
@@ -2186,7 +2195,7 @@ int HexValue(char c)
   return -1;
 }
 
-void HexEncrypt(char *sir)
+void HexEncrypt()
 {
   textbox();
   tft.setCursor(5, 45);
@@ -2219,7 +2228,7 @@ void HexEncrypt(char *sir)
     
 }
 
-void HexDecrypt(char *sir)
+void HexDecrypt()
 {
   textbox();
   tft.setCursor(5, 45);
@@ -2245,9 +2254,7 @@ void HexDecrypt(char *sir)
 
 void GetTasteHexEncrypt()
 {
-  char sir[1000] = "";
-  int len = 0;
-  int mode = 1;
+  resetString();
   while(1)
   {
     
@@ -2267,12 +2274,12 @@ void GetTasteHexEncrypt()
             textbox();
             len--;
             sir[len] = 0;
-            afisare_sir(sir);
+            afisare_sir();
           }
        else if(p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
        {
         sir[len] = 0;
-          HexEncrypt(sir);
+          HexEncrypt();
           break;
        }
         
@@ -2284,68 +2291,68 @@ void GetTasteHexEncrypt()
         
        }
        else if(p.x >= 280 && p.x <= 595 && p.y >= 830 && p.y <= 895)
-        displayChar(' ', sir, len);
+        displayChar(' ');
        else if(p.y >= 600 && p.y <= 660)
        {
          if(p.x >= 190 && p.x <= 240)
-          displayChar('Q', sir, len);
+          displayChar('Q');
          else if(p.x >= 245 && p.x <= 295)
-         displayChar('W', sir, len);
+         displayChar('W');
          else if(p.x >= 300 && p.x <= 350)
-         displayChar('E', sir, len);
+         displayChar('E');
          else if(p.x >= 355 && p.x <= 405)
-         displayChar('R', sir, len);
+         displayChar('R');
          else if(p.x >= 410 && p.x <= 460)
-         displayChar('T', sir, len);
+         displayChar('T');
          else if(p.x >= 465 && p.x <= 515)
-         displayChar('Y', sir, len);
+         displayChar('Y');
          else if(p.x >= 520 && p.x <= 570)
-         displayChar('U', sir, len);
+         displayChar('U');
          else if(p.x >= 575 && p.x <= 625)
-         displayChar('I', sir, len);
+         displayChar('I');
          else if(p.x >= 630 && p.x <= 680)
-         displayChar('O', sir, len);
+         displayChar('O');
          else if(p.x >= 685 && p.x <= 735)
-         displayChar('P', sir, len);
+         displayChar('P');
          
        }
        else if(p.y >= 670 && p.y <= 730)
        {
         if(p.x >= 220 && p.x <= 270)
-        displayChar('A', sir, len);
+        displayChar('A');
         else if(p.x >= 275 && p.x <= 325)
-        displayChar('S', sir, len);
+        displayChar('S');
         else if(p.x >= 330 && p.x <= 380)
-        displayChar('D', sir, len);
+        displayChar('D');
         else if(p.x >= 385 && p.x <= 435)
-        displayChar('F', sir, len);
+        displayChar('F');
         else if(p.x >= 440 && p.x <= 490)
-        displayChar('G', sir, len);
+        displayChar('G');
         else if(p.x >= 495 && p.x <= 545)
-        displayChar('H', sir, len);
+        displayChar('H');
         else if(p.x >= 550 && p.x <= 600)
-        displayChar('J', sir, len);
+        displayChar('J');
         else if(p.x >= 605 && p.x <= 655)
-        displayChar('K', sir, len);
+        displayChar('K');
         else if(p.x >= 660 && p.x <= 710)
-        displayChar('L', sir, len);
+        displayChar('L');
        }
        else if(p.y >= 740 && p.y <= 800)
        {
         if(p.x >= 250 && p.x <= 300)
-        displayChar('Z', sir, len);
+        displayChar('Z');
         else if(p.x >= 305 && p.x <= 355)
-        displayChar('X', sir, len);
+        displayChar('X');
         else if(p.x >= 360 && p.x <= 410)
-        displayChar('C', sir, len);
+        displayChar('C');
         else if(p.x >= 415 && p.x <= 465)
-        displayChar('V', sir, len);
+        displayChar('V');
         else if(p.x >= 470 && p.x <= 520)
-        displayChar('B', sir, len);
+        displayChar('B');
         else if(p.x >= 525 && p.x <= 575)
-        displayChar('N', sir, len);
+        displayChar('N');
         else if(p.x >= 580 && p.x <= 630)
-        displayChar('M', sir, len);
+        displayChar('M');
        }
        
      }
@@ -2356,12 +2363,12 @@ void GetTasteHexEncrypt()
             textbox();
             len--;
             sir[len] = 0;
-            afisare_sir(sir);
+            afisare_sir();
         }
        else if(p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
        {
         sir[len] = 0;
-          HexEncrypt(sir);
+          HexEncrypt();
           break;
        }
        else if(p.x >= 770 && p.x <= 895 && p.y >= 745 && p.y <= 805)
@@ -2370,85 +2377,85 @@ void GetTasteHexEncrypt()
         tast_litere();
        }
        else if(p.x >= 280 && p.x <= 595 && p.y >= 830 && p.y <= 895)
-        displayChar(' ', sir, len);
+        displayChar(' ');
        else if(p.y >= 600 && p.y <= 660)
        {
          if(p.x >= 190 && p.x <= 240)
-          displayChar('1', sir, len);
+          displayChar('1');
          else if(p.x >= 245 && p.x <= 295)
-         displayChar('2', sir, len);
+         displayChar('2');
          else if(p.x >= 300 && p.x <= 350)
-         displayChar('3', sir, len);
+         displayChar('3');
          else if(p.x >= 355 && p.x <= 405)
-         displayChar('4', sir, len);
+         displayChar('4');
          else if(p.x >= 410 && p.x <= 460)
-         displayChar('5', sir, len);
+         displayChar('5');
          else if(p.x >= 465 && p.x <= 515)
-         displayChar('6', sir, len);
+         displayChar('6');
          else if(p.x >= 520 && p.x <= 570)
-         displayChar('7', sir, len);
+         displayChar('7');
          else if(p.x >= 575 && p.x <= 625)
-         displayChar('8', sir, len);
+         displayChar('8');
          else if(p.x >= 630 && p.x <= 680)
-         displayChar('9', sir, len);
+         displayChar('9');
          else if(p.x >= 685 && p.x <= 735)
-         displayChar('0', sir, len);
+         displayChar('0');
          
        }
        else if(p.y >= 670 && p.y <= 730)
        {
          if(p.x >= 190 && p.x <= 240)
-          displayChar('@', sir, len);
+          displayChar('@');
          else if(p.x >= 245 && p.x <= 295)
-         displayChar('.', sir, len);
+         displayChar('.');
          else if(p.x >= 300 && p.x <= 350)
-         displayChar('$', sir, len);
+         displayChar('$');
          else if(p.x >= 355 && p.x <= 405)
-         displayChar('_', sir, len);
+         displayChar('_');
          else if(p.x >= 410 && p.x <= 460)
-         displayChar('&', sir, len);
+         displayChar('&');
          else if(p.x >= 465 && p.x <= 515)
-         displayChar('-', sir, len);
+         displayChar('-');
          else if(p.x >= 520 && p.x <= 570)
-         displayChar('+', sir, len);
+         displayChar('+');
          else if(p.x >= 575 && p.x <= 625)
-         displayChar('(', sir, len);
+         displayChar('(');
          else if(p.x >= 630 && p.x <= 680)
-         displayChar(')', sir, len);
+         displayChar(')');
          else if(p.x >= 685 && p.x <= 735)
-         displayChar('/', sir, len);
+         displayChar('/');
         
        }  
        else if(p.y >= 740 && p.y <= 800)
        {
         if(p.x >= 190 && p.x <= 240)
-          displayChar('<', sir, len);
+          displayChar('<');
          else if(p.x >= 245 && p.x <= 295)
-         displayChar('*', sir, len);
+         displayChar('*');
          else if(p.x >= 300 && p.x <= 350)
-         displayChar('\'', sir, len);
+         displayChar('\'');
          else if(p.x >= 355 && p.x <= 405)
-         displayChar(':', sir, len);
+         displayChar(':');
          else if(p.x >= 410 && p.x <= 460)
-         displayChar(';', sir, len);
+         displayChar(';');
          else if(p.x >= 465 && p.x <= 515)
-         displayChar('!', sir, len);
+         displayChar('!');
          else if(p.x >= 520 && p.x <= 570)
-         displayChar('?', sir, len);
+         displayChar('?');
          else if(p.x >= 575 && p.x <= 625)
-         displayChar('=', sir, len);
+         displayChar('=');
          else if(p.x >= 630 && p.x <= 680)
-         displayChar('%', sir, len);
+         displayChar('%');
          else if(p.x >= 685 && p.x <= 735)
-         displayChar('>', sir, len);
+         displayChar('>');
        }
        else if(p.y >= 810 && p.y <= 870)
        {
          if(p.x >= 190 && p.x <= 240)
-          displayChar(',', sir, len);
+          displayChar(',');
          else if(p.x >= 630 && p.x <= 680)
          {
-          displayChar('\"', sir, len);
+          displayChar('\"');
          }
        }
        
@@ -2465,9 +2472,7 @@ void GetTasteHexEncrypt()
 
 void GetTasteHexDecrypt()
 {
-  char sir[1000] = "";
-  int len = 0;
-  int mode = 1;
+  resetString();
   while(1)
   {
     
@@ -2487,12 +2492,12 @@ void GetTasteHexDecrypt()
             textbox();
             len--;
             sir[len] = 0;
-            afisare_sir(sir);
+            afisare_sir();
           }
        else if(p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
        {
         sir[len] = 0;
-          HexDecrypt(sir);
+          HexDecrypt();
           break;
        }
         
@@ -2504,68 +2509,68 @@ void GetTasteHexDecrypt()
         
        }
        else if(p.x >= 280 && p.x <= 595 && p.y >= 830 && p.y <= 895)
-        displayChar(' ', sir, len);
+        displayChar(' ');
        else if(p.y >= 600 && p.y <= 660)
        {
          if(p.x >= 190 && p.x <= 240)
-          error_message("Caracter neacceptat", sir);
+          error_message();
          else if(p.x >= 245 && p.x <= 295)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 300 && p.x <= 350)
-         displayChar('E', sir, len);
+         displayChar('E');
          else if(p.x >= 355 && p.x <= 405)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 410 && p.x <= 460)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 465 && p.x <= 515)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 520 && p.x <= 570)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 575 && p.x <= 625)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 630 && p.x <= 680)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 685 && p.x <= 735)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          
        }
        else if(p.y >= 670 && p.y <= 730)
        {
         if(p.x >= 220 && p.x <= 270)
-        displayChar('A', sir, len);
+        displayChar('A');
         else if(p.x >= 275 && p.x <= 325)
-        error_message("Caracter neacceptat", sir);
+        error_message();
         else if(p.x >= 330 && p.x <= 380)
-        displayChar('D', sir, len);
+        displayChar('D');
         else if(p.x >= 385 && p.x <= 435)
-        displayChar('F', sir, len);
+        displayChar('F');
         else if(p.x >= 440 && p.x <= 490)
-       error_message("Caracter neacceptat", sir);
+       error_message();
         else if(p.x >= 495 && p.x <= 545)
-        error_message("Caracter neacceptat", sir);
+        error_message();
         else if(p.x >= 550 && p.x <= 600)
-       error_message("Caracter neacceptat", sir);
+       error_message();
         else if(p.x >= 605 && p.x <= 655)
-        error_message("Caracter neacceptat", sir);
+        error_message();
         else if(p.x >= 660 && p.x <= 710)
-       error_message("Caracter neacceptat", sir);
+       error_message();
        }
        else if(p.y >= 740 && p.y <= 800)
        {
         if(p.x >= 250 && p.x <= 300)
-        error_message("Caracter neacceptat", sir);
+        error_message();
         else if(p.x >= 305 && p.x <= 355)
-        error_message("Caracter neacceptat", sir);
+        error_message();
         else if(p.x >= 360 && p.x <= 410)
-        displayChar('C', sir, len);
+        displayChar('C');
         else if(p.x >= 415 && p.x <= 465)
-        error_message("Caracter neacceptat", sir);
+        error_message();
         else if(p.x >= 470 && p.x <= 520)
-        displayChar('B', sir, len);
+        displayChar('B');
         else if(p.x >= 525 && p.x <= 575)
-       error_message("Caracter neacceptat", sir);
+       error_message();
         else if(p.x >= 580 && p.x <= 630)
-        error_message("Caracter neacceptat", sir);
+        error_message();
        }
        
      }
@@ -2576,12 +2581,12 @@ void GetTasteHexDecrypt()
             textbox();
             len--;
             sir[len] = 0;
-            afisare_sir(sir);
+            afisare_sir();
         }
        else if(p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
        {
           sir[len] = 0;
-          HexDecrypt(sir);
+          HexDecrypt();
           break;
        }
        else if(p.x >= 770 && p.x <= 895 && p.y >= 745 && p.y <= 805)
@@ -2590,85 +2595,85 @@ void GetTasteHexDecrypt()
         tast_litere();
        }
        else if(p.x >= 280 && p.x <= 595 && p.y >= 830 && p.y <= 895)
-        displayChar(' ', sir, len);
+        displayChar(' ');
        else if(p.y >= 600 && p.y <= 660)
        {
          if(p.x >= 190 && p.x <= 240)
-          displayChar('1', sir, len);
+          displayChar('1');
          else if(p.x >= 245 && p.x <= 295)
-         displayChar('2', sir, len);
+         displayChar('2');
          else if(p.x >= 300 && p.x <= 350)
-         displayChar('3', sir, len);
+         displayChar('3');
          else if(p.x >= 355 && p.x <= 405)
-         displayChar('4', sir, len);
+         displayChar('4');
          else if(p.x >= 410 && p.x <= 460)
-         displayChar('5', sir, len);
+         displayChar('5');
          else if(p.x >= 465 && p.x <= 515)
-         displayChar('6', sir, len);
+         displayChar('6');
          else if(p.x >= 520 && p.x <= 570)
-         displayChar('7', sir, len);
+         displayChar('7');
          else if(p.x >= 575 && p.x <= 625)
-         displayChar('8', sir, len);
+         displayChar('8');
          else if(p.x >= 630 && p.x <= 680)
-         displayChar('9', sir, len);
+         displayChar('9');
          else if(p.x >= 685 && p.x <= 735)
-         displayChar('0', sir, len);
+         displayChar('0');
          
        }
        else if(p.y >= 670 && p.y <= 730)
        {
          if(p.x >= 190 && p.x <= 240)
-          error_message("Caracter neacceptat", sir);
+          error_message();
          else if(p.x >= 245 && p.x <= 295)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 300 && p.x <= 350)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 355 && p.x <= 405)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 410 && p.x <= 460)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 465 && p.x <= 515)
-        error_message("Caracter neacceptat", sir);
+        error_message();
          else if(p.x >= 520 && p.x <= 570)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 575 && p.x <= 625)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 630 && p.x <= 680)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 685 && p.x <= 735)
-         error_message("Caracter neacceptat", sir);
+         error_message();
         
        }  
        else if(p.y >= 740 && p.y <= 800)
        {
         if(p.x >= 190 && p.x <= 240)
-          error_message("Caracter neacceptat", sir);
+          error_message();
          else if(p.x >= 245 && p.x <= 295)
-        error_message("Caracter neacceptat", sir);
+        error_message();
          else if(p.x >= 300 && p.x <= 350)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 355 && p.x <= 405)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 410 && p.x <= 460)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 465 && p.x <= 515)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 520 && p.x <= 570)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 575 && p.x <= 625)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 630 && p.x <= 680)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 685 && p.x <= 735)
-         error_message("Caracter neacceptat", sir);
+         error_message();
        }
        else if(p.y >= 810 && p.y <= 870)
        {
          if(p.x >= 190 && p.x <= 240)
-          error_message("Caracter neacceptat", sir);
+          error_message();
          else if(p.x >= 630 && p.x <= 680)
          {
-          error_message("Caracter neacceptat", sir);
+          error_message();
          }
        }
        
@@ -2683,7 +2688,7 @@ void GetTasteHexDecrypt()
   }
 }
 
-void BinaryEncrypt(char *sir)
+void BinaryEncrypt()
 {
   textbox();
   tft.setCursor(5, 45);
@@ -2730,7 +2735,7 @@ void BinaryEncrypt(char *sir)
     
 }
 
-void BinaryDecrypt(char *sir)
+void BinaryDecrypt()
 {
   textbox();
   tft.setCursor(5, 45);
@@ -2756,9 +2761,7 @@ void BinaryDecrypt(char *sir)
 
 void GetTasteBinaryEncrypt()
 {
-  char sir[1000] = "";
-  int len = 0;
-  int mode = 1;
+  resetString();
   while(1)
   {
     
@@ -2778,12 +2781,12 @@ void GetTasteBinaryEncrypt()
             textbox();
             len--;
             sir[len] = 0;
-            afisare_sir(sir);
+            afisare_sir();
           }
        else if(p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
        {
           sir[len] = 0;
-          BinaryEncrypt(sir);
+          BinaryEncrypt();
           break;
        }
         
@@ -2795,68 +2798,68 @@ void GetTasteBinaryEncrypt()
         
        }
        else if(p.x >= 280 && p.x <= 595 && p.y >= 830 && p.y <= 895)
-        displayChar(' ', sir, len);
+        displayChar(' ');
        else if(p.y >= 600 && p.y <= 660)
        {
          if(p.x >= 190 && p.x <= 240)
-          displayChar('Q', sir, len);
+          displayChar('Q');
          else if(p.x >= 245 && p.x <= 295)
-         displayChar('W', sir, len);
+         displayChar('W');
          else if(p.x >= 300 && p.x <= 350)
-         displayChar('E', sir, len);
+         displayChar('E');
          else if(p.x >= 355 && p.x <= 405)
-         displayChar('R', sir, len);
+         displayChar('R');
          else if(p.x >= 410 && p.x <= 460)
-         displayChar('T', sir, len);
+         displayChar('T');
          else if(p.x >= 465 && p.x <= 515)
-         displayChar('Y', sir, len);
+         displayChar('Y');
          else if(p.x >= 520 && p.x <= 570)
-         displayChar('U', sir, len);
+         displayChar('U');
          else if(p.x >= 575 && p.x <= 625)
-         displayChar('I', sir, len);
+         displayChar('I');
          else if(p.x >= 630 && p.x <= 680)
-         displayChar('O', sir, len);
+         displayChar('O');
          else if(p.x >= 685 && p.x <= 735)
-         displayChar('P', sir, len);
+         displayChar('P');
          
        }
        else if(p.y >= 670 && p.y <= 730)
        {
         if(p.x >= 220 && p.x <= 270)
-        displayChar('A', sir, len);
+        displayChar('A');
         else if(p.x >= 275 && p.x <= 325)
-        displayChar('S', sir, len);
+        displayChar('S');
         else if(p.x >= 330 && p.x <= 380)
-        displayChar('D', sir, len);
+        displayChar('D');
         else if(p.x >= 385 && p.x <= 435)
-        displayChar('F', sir, len);
+        displayChar('F');
         else if(p.x >= 440 && p.x <= 490)
-        displayChar('G', sir, len);
+        displayChar('G');
         else if(p.x >= 495 && p.x <= 545)
-        displayChar('H', sir, len);
+        displayChar('H');
         else if(p.x >= 550 && p.x <= 600)
-        displayChar('J', sir, len);
+        displayChar('J');
         else if(p.x >= 605 && p.x <= 655)
-        displayChar('K', sir, len);
+        displayChar('K');
         else if(p.x >= 660 && p.x <= 710)
-        displayChar('L', sir, len);
+        displayChar('L');
        }
        else if(p.y >= 740 && p.y <= 800)
        {
         if(p.x >= 250 && p.x <= 300)
-        displayChar('Z', sir, len);
+        displayChar('Z');
         else if(p.x >= 305 && p.x <= 355)
-        displayChar('X', sir, len);
+        displayChar('X');
         else if(p.x >= 360 && p.x <= 410)
-        displayChar('C', sir, len);
+        displayChar('C');
         else if(p.x >= 415 && p.x <= 465)
-        displayChar('V', sir, len);
+        displayChar('V');
         else if(p.x >= 470 && p.x <= 520)
-        displayChar('B', sir, len);
+        displayChar('B');
         else if(p.x >= 525 && p.x <= 575)
-        displayChar('N', sir, len);
+        displayChar('N');
         else if(p.x >= 580 && p.x <= 630)
-        displayChar('M', sir, len);
+        displayChar('M');
        }
        
      }
@@ -2867,12 +2870,12 @@ void GetTasteBinaryEncrypt()
             textbox();
             len--;
             sir[len] = 0;
-            afisare_sir(sir);
+            afisare_sir();
         }
        else if(p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
        {
           sir[len] = 0;
-          BinaryEncrypt(sir);
+          BinaryEncrypt();
           break;
        }
        else if(p.x >= 770 && p.x <= 895 && p.y >= 745 && p.y <= 805)
@@ -2881,85 +2884,85 @@ void GetTasteBinaryEncrypt()
         tast_litere();
        }
        else if(p.x >= 280 && p.x <= 595 && p.y >= 830 && p.y <= 895)
-        displayChar(' ', sir, len);
+        displayChar(' ');
        else if(p.y >= 600 && p.y <= 660)
        {
          if(p.x >= 190 && p.x <= 240)
-          displayChar('1', sir, len);
+          displayChar('1');
          else if(p.x >= 245 && p.x <= 295)
-         displayChar('2', sir, len);
+         displayChar('2');
          else if(p.x >= 300 && p.x <= 350)
-         displayChar('3', sir, len);
+         displayChar('3');
          else if(p.x >= 355 && p.x <= 405)
-         displayChar('4', sir, len);
+         displayChar('4');
          else if(p.x >= 410 && p.x <= 460)
-         displayChar('5', sir, len);
+         displayChar('5');
          else if(p.x >= 465 && p.x <= 515)
-         displayChar('6', sir, len);
+         displayChar('6');
          else if(p.x >= 520 && p.x <= 570)
-         displayChar('7', sir, len);
+         displayChar('7');
          else if(p.x >= 575 && p.x <= 625)
-         displayChar('8', sir, len);
+         displayChar('8');
          else if(p.x >= 630 && p.x <= 680)
-         displayChar('9', sir, len);
+         displayChar('9');
          else if(p.x >= 685 && p.x <= 735)
-         displayChar('0', sir, len);
+         displayChar('0');
          
        }
        else if(p.y >= 670 && p.y <= 730)
        {
          if(p.x >= 190 && p.x <= 240)
-          displayChar('@', sir, len);
+          displayChar('@');
          else if(p.x >= 245 && p.x <= 295)
-         displayChar('.', sir, len);
+         displayChar('.');
          else if(p.x >= 300 && p.x <= 350)
-         displayChar('$', sir, len);
+         displayChar('$');
          else if(p.x >= 355 && p.x <= 405)
-         displayChar('_', sir, len);
+         displayChar('_');
          else if(p.x >= 410 && p.x <= 460)
-         displayChar('&', sir, len);
+         displayChar('&');
          else if(p.x >= 465 && p.x <= 515)
-         displayChar('-', sir, len);
+         displayChar('-');
          else if(p.x >= 520 && p.x <= 570)
-         displayChar('+', sir, len);
+         displayChar('+');
          else if(p.x >= 575 && p.x <= 625)
-         displayChar('(', sir, len);
+         displayChar('(');
          else if(p.x >= 630 && p.x <= 680)
-         displayChar(')', sir, len);
+         displayChar(')');
          else if(p.x >= 685 && p.x <= 735)
-         displayChar('/', sir, len);
+         displayChar('/');
         
        }  
        else if(p.y >= 740 && p.y <= 800)
        {
         if(p.x >= 190 && p.x <= 240)
-          displayChar('<', sir, len);
+          displayChar('<');
          else if(p.x >= 245 && p.x <= 295)
-         displayChar('*', sir, len);
+         displayChar('*');
          else if(p.x >= 300 && p.x <= 350)
-         displayChar('\'', sir, len);
+         displayChar('\'');
          else if(p.x >= 355 && p.x <= 405)
-         displayChar(':', sir, len);
+         displayChar(':');
          else if(p.x >= 410 && p.x <= 460)
-         displayChar(';', sir, len);
+         displayChar(';');
          else if(p.x >= 465 && p.x <= 515)
-         displayChar('!', sir, len);
+         displayChar('!');
          else if(p.x >= 520 && p.x <= 570)
-         displayChar('?', sir, len);
+         displayChar('?');
          else if(p.x >= 575 && p.x <= 625)
-         displayChar('=', sir, len);
+         displayChar('=');
          else if(p.x >= 630 && p.x <= 680)
-         displayChar('%', sir, len);
+         displayChar('%');
          else if(p.x >= 685 && p.x <= 735)
-         displayChar('>', sir, len);
+         displayChar('>');
        }
        else if(p.y >= 810 && p.y <= 870)
        {
          if(p.x >= 190 && p.x <= 240)
-          displayChar(',', sir, len);
+          displayChar(',');
          else if(p.x >= 630 && p.x <= 680)
          {
-          displayChar('\"', sir, len);
+          displayChar('\"');
          }
        }
        
@@ -2976,9 +2979,7 @@ void GetTasteBinaryEncrypt()
 
 void GetTasteBinaryDecrypt()
 {
-  char sir[1000] = "";
-  int len = 0;
-  int mode = 1;
+  resetString();
   while(1)
   {
     
@@ -2998,12 +2999,12 @@ void GetTasteBinaryDecrypt()
             textbox();
             len--;
             sir[len] = 0;
-            afisare_sir(sir);
+            afisare_sir();
           }
        else if(p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
        {
         sir[len] = 0;
-          BinaryDecrypt(sir);
+          BinaryDecrypt();
           break;
        }
         
@@ -3015,68 +3016,68 @@ void GetTasteBinaryDecrypt()
         
        }
        else if(p.x >= 280 && p.x <= 595 && p.y >= 830 && p.y <= 895)
-        displayChar(' ', sir, len);
+        displayChar(' ');
        else if(p.y >= 600 && p.y <= 660)
        {
          if(p.x >= 190 && p.x <= 240)
-          error_message("Caracter neacceptat", sir);
+          error_message();
          else if(p.x >= 245 && p.x <= 295)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 300 && p.x <= 350)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 355 && p.x <= 405)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 410 && p.x <= 460)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 465 && p.x <= 515)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 520 && p.x <= 570)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 575 && p.x <= 625)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 630 && p.x <= 680)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 685 && p.x <= 735)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          
        }
        else if(p.y >= 670 && p.y <= 730)
        {
         if(p.x >= 220 && p.x <= 270)
-        error_message("Caracter neacceptat", sir);
+        error_message();
         else if(p.x >= 275 && p.x <= 325)
-        error_message("Caracter neacceptat", sir);
+        error_message();
         else if(p.x >= 330 && p.x <= 380)
-        error_message("Caracter neacceptat", sir);
+        error_message();
         else if(p.x >= 385 && p.x <= 435)
-        error_message("Caracter neacceptat", sir);
+        error_message();
         else if(p.x >= 440 && p.x <= 490)
-       error_message("Caracter neacceptat", sir);
+       error_message();
         else if(p.x >= 495 && p.x <= 545)
-        error_message("Caracter neacceptat", sir);
+        error_message();
         else if(p.x >= 550 && p.x <= 600)
-       error_message("Caracter neacceptat", sir);
+       error_message();
         else if(p.x >= 605 && p.x <= 655)
-        error_message("Caracter neacceptat", sir);
+        error_message();
         else if(p.x >= 660 && p.x <= 710)
-       error_message("Caracter neacceptat", sir);
+       error_message();
        }
        else if(p.y >= 740 && p.y <= 800)
        {
         if(p.x >= 250 && p.x <= 300)
-        error_message("Caracter neacceptat", sir);
+        error_message();
         else if(p.x >= 305 && p.x <= 355)
-        error_message("Caracter neacceptat", sir);
+        error_message();
         else if(p.x >= 360 && p.x <= 410)
-        error_message("Caracter neacceptat", sir);
+        error_message();
         else if(p.x >= 415 && p.x <= 465)
-        error_message("Caracter neacceptat", sir);
+        error_message();
         else if(p.x >= 470 && p.x <= 520)
-        error_message("Caracter neacceptat", sir);
+        error_message();
         else if(p.x >= 525 && p.x <= 575)
-       error_message("Caracter neacceptat", sir);
+       error_message();
         else if(p.x >= 580 && p.x <= 630)
-        error_message("Caracter neacceptat", sir);
+        error_message();
        }
        
      }
@@ -3087,12 +3088,12 @@ void GetTasteBinaryDecrypt()
             textbox();
             len--;
             sir[len] = 0;
-            afisare_sir(sir);
+            afisare_sir();
         }
        else if(p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
        {
         sir[len] = 0;
-          BinaryDecrypt(sir);
+          BinaryDecrypt();
           break;
        }
        else if(p.x >= 770 && p.x <= 895 && p.y >= 745 && p.y <= 805)
@@ -3101,85 +3102,85 @@ void GetTasteBinaryDecrypt()
         tast_litere();
        }
        else if(p.x >= 280 && p.x <= 595 && p.y >= 830 && p.y <= 895)
-        displayChar(' ', sir, len);
+        displayChar(' ');
        else if(p.y >= 600 && p.y <= 660)
        {
          if(p.x >= 190 && p.x <= 240)
-          displayChar('1', sir, len);
+          displayChar('1');
          else if(p.x >= 245 && p.x <= 295)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 300 && p.x <= 350)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 355 && p.x <= 405)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 410 && p.x <= 460)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 465 && p.x <= 515)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 520 && p.x <= 570)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 575 && p.x <= 625)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 630 && p.x <= 680)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 685 && p.x <= 735)
-         displayChar('0', sir, len);
+         displayChar('0');
          
        }
        else if(p.y >= 670 && p.y <= 730)
        {
          if(p.x >= 190 && p.x <= 240)
-          error_message("Caracter neacceptat", sir);
+          error_message();
          else if(p.x >= 245 && p.x <= 295)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 300 && p.x <= 350)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 355 && p.x <= 405)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 410 && p.x <= 460)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 465 && p.x <= 515)
-        error_message("Caracter neacceptat", sir);
+        error_message();
          else if(p.x >= 520 && p.x <= 570)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 575 && p.x <= 625)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 630 && p.x <= 680)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 685 && p.x <= 735)
-         error_message("Caracter neacceptat", sir);
+         error_message();
         
        }  
        else if(p.y >= 740 && p.y <= 800)
        {
         if(p.x >= 190 && p.x <= 240)
-          error_message("Caracter neacceptat", sir);
+          error_message();
          else if(p.x >= 245 && p.x <= 295)
-        error_message("Caracter neacceptat", sir);
+        error_message();
          else if(p.x >= 300 && p.x <= 350)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 355 && p.x <= 405)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 410 && p.x <= 460)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 465 && p.x <= 515)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 520 && p.x <= 570)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 575 && p.x <= 625)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 630 && p.x <= 680)
-         error_message("Caracter neacceptat", sir);
+         error_message();
          else if(p.x >= 685 && p.x <= 735)
-         error_message("Caracter neacceptat", sir);
+         error_message();
        }
        else if(p.y >= 810 && p.y <= 870)
        {
          if(p.x >= 190 && p.x <= 240)
-          error_message("Caracter neacceptat", sir);
+          error_message();
          else if(p.x >= 630 && p.x <= 680)
          {
-          error_message("Caracter neacceptat", sir);
+          error_message();
          }
        }
        
@@ -3194,7 +3195,7 @@ void GetTasteBinaryDecrypt()
   }
 }
 
-void VigenereEncrypt(char *sir, char *cheie)
+void VigenereEncrypt()
 {
   textbox();
   tft.setCursor(5, 45);
@@ -3210,7 +3211,7 @@ void VigenereEncrypt(char *sir, char *cheie)
     }
     
   }
-  afisare_sir(sir);
+  afisare_sir();
 
   while(1)
   {
@@ -3227,7 +3228,7 @@ void VigenereEncrypt(char *sir, char *cheie)
   }
 }
 
-void Atbash(char *sir)
+void Atbash()
 {
   pinMode(A1, OUTPUT);
   pinMode(A2, OUTPUT);
@@ -3238,7 +3239,7 @@ void Atbash(char *sir)
   for(int i = 0; sir[i] != 0; i++)
     if(litera(sir[i]))
       sir[i] = 26 - (sir[i] - 'A' + 1) + 'A';
-  afisare_sir(sir);
+  afisare_sir();
 
   while(1)
   {
@@ -3255,7 +3256,7 @@ void Atbash(char *sir)
   }
 }
 
-void VigenereDecrypt(char sir[], char cheie[])
+void VigenereDecrypt()
 {
   
   textbox();
@@ -3292,7 +3293,7 @@ void VigenereDecrypt(char sir[], char cheie[])
     }
     
   }
-  afisare_sir(sir);
+  afisare_sir();
 
   while(1)
   {
@@ -3311,9 +3312,7 @@ void VigenereDecrypt(char sir[], char cheie[])
 
 void GetTasteAtbash()
 {
-  char sir[1000] = "";
-  int len = 0;
-  int mode = 1;
+  resetString();
   while(1)
   {
     
@@ -3333,13 +3332,13 @@ void GetTasteAtbash()
             textbox();
             len--;
             sir[len] = 0;
-            afisare_sir(sir);
+            afisare_sir();
           }
        else if(p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
        {
           Serial.print("OK");
           sir[len] = 0;
-          Atbash(sir);
+          Atbash();
           break;
        }
         
@@ -3351,68 +3350,68 @@ void GetTasteAtbash()
         
        }
        else if(p.x >= 280 && p.x <= 595 && p.y >= 830 && p.y <= 895)
-        displayChar(' ', sir, len);
+        displayChar(' ');
        else if(p.y >= 600 && p.y <= 660)
        {
          if(p.x >= 190 && p.x <= 240)
-          displayChar('Q', sir, len);
+          displayChar('Q');
          else if(p.x >= 245 && p.x <= 295)
-         displayChar('W', sir, len);
+         displayChar('W');
          else if(p.x >= 300 && p.x <= 350)
-         displayChar('E', sir, len);
+         displayChar('E');
          else if(p.x >= 355 && p.x <= 405)
-         displayChar('R', sir, len);
+         displayChar('R');
          else if(p.x >= 410 && p.x <= 460)
-         displayChar('T', sir, len);
+         displayChar('T');
          else if(p.x >= 465 && p.x <= 515)
-         displayChar('Y', sir, len);
+         displayChar('Y');
          else if(p.x >= 520 && p.x <= 570)
-         displayChar('U', sir, len);
+         displayChar('U');
          else if(p.x >= 575 && p.x <= 625)
-         displayChar('I', sir, len);
+         displayChar('I');
          else if(p.x >= 630 && p.x <= 680)
-         displayChar('O', sir, len);
+         displayChar('O');
          else if(p.x >= 685 && p.x <= 735)
-         displayChar('P', sir, len);
+         displayChar('P');
          
        }
        else if(p.y >= 670 && p.y <= 730)
        {
         if(p.x >= 220 && p.x <= 270)
-        displayChar('A', sir, len);
+        displayChar('A');
         else if(p.x >= 275 && p.x <= 325)
-        displayChar('S', sir, len);
+        displayChar('S');
         else if(p.x >= 330 && p.x <= 380)
-        displayChar('D', sir, len);
+        displayChar('D');
         else if(p.x >= 385 && p.x <= 435)
-        displayChar('F', sir, len);
+        displayChar('F');
         else if(p.x >= 440 && p.x <= 490)
-        displayChar('G', sir, len);
+        displayChar('G');
         else if(p.x >= 495 && p.x <= 545)
-        displayChar('H', sir, len);
+        displayChar('H');
         else if(p.x >= 550 && p.x <= 600)
-        displayChar('J', sir, len);
+        displayChar('J');
         else if(p.x >= 605 && p.x <= 655)
-        displayChar('K', sir, len);
+        displayChar('K');
         else if(p.x >= 660 && p.x <= 710)
-        displayChar('L', sir, len);
+        displayChar('L');
        }
        else if(p.y >= 740 && p.y <= 800)
        {
         if(p.x >= 250 && p.x <= 300)
-        displayChar('Z', sir, len);
+        displayChar('Z');
         else if(p.x >= 305 && p.x <= 355)
-        displayChar('X', sir, len);
+        displayChar('X');
         else if(p.x >= 360 && p.x <= 410)
-        displayChar('C', sir, len);
+        displayChar('C');
         else if(p.x >= 415 && p.x <= 465)
-        displayChar('V', sir, len);
+        displayChar('V');
         else if(p.x >= 470 && p.x <= 520)
-        displayChar('B', sir, len);
+        displayChar('B');
         else if(p.x >= 525 && p.x <= 575)
-        displayChar('N', sir, len);
+        displayChar('N');
         else if(p.x >= 580 && p.x <= 630)
-        displayChar('M', sir, len);
+        displayChar('M');
        }
        
      }
@@ -3423,13 +3422,13 @@ void GetTasteAtbash()
             textbox();
             len--;
             sir[len] = 0;
-            afisare_sir(sir);
+            afisare_sir();
         }
        else if(p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
        {
           Serial.print("OK");
           sir[len] = 0;
-          Atbash(sir);
+          Atbash();
           break;
        }
        else if(p.x >= 770 && p.x <= 895 && p.y >= 745 && p.y <= 805)
@@ -3438,85 +3437,85 @@ void GetTasteAtbash()
         tast_litere();
        }
        else if(p.x >= 280 && p.x <= 595 && p.y >= 830 && p.y <= 895)
-        displayChar(' ', sir, len);
+        displayChar(' ');
        else if(p.y >= 600 && p.y <= 660)
        {
          if(p.x >= 190 && p.x <= 240)
-          displayChar('1', sir, len);
+          displayChar('1');
          else if(p.x >= 245 && p.x <= 295)
-         displayChar('2', sir, len);
+         displayChar('2');
          else if(p.x >= 300 && p.x <= 350)
-         displayChar('3', sir, len);
+         displayChar('3');
          else if(p.x >= 355 && p.x <= 405)
-         displayChar('4', sir, len);
+         displayChar('4');
          else if(p.x >= 410 && p.x <= 460)
-         displayChar('5', sir, len);
+         displayChar('5');
          else if(p.x >= 465 && p.x <= 515)
-         displayChar('6', sir, len);
+         displayChar('6');
          else if(p.x >= 520 && p.x <= 570)
-         displayChar('7', sir, len);
+         displayChar('7');
          else if(p.x >= 575 && p.x <= 625)
-         displayChar('8', sir, len);
+         displayChar('8');
          else if(p.x >= 630 && p.x <= 680)
-         displayChar('9', sir, len);
+         displayChar('9');
          else if(p.x >= 685 && p.x <= 735)
-         displayChar('0', sir, len);
+         displayChar('0');
          
        }
        else if(p.y >= 670 && p.y <= 730)
        {
          if(p.x >= 190 && p.x <= 240)
-          displayChar('@', sir, len);
+          displayChar('@');
          else if(p.x >= 245 && p.x <= 295)
-         displayChar('.', sir, len);
+         displayChar('.');
          else if(p.x >= 300 && p.x <= 350)
-         displayChar('$', sir, len);
+         displayChar('$');
          else if(p.x >= 355 && p.x <= 405)
-         displayChar('_', sir, len);
+         displayChar('_');
          else if(p.x >= 410 && p.x <= 460)
-         displayChar('&', sir, len);
+         displayChar('&');
          else if(p.x >= 465 && p.x <= 515)
-         displayChar('-', sir, len);
+         displayChar('-');
          else if(p.x >= 520 && p.x <= 570)
-         displayChar('+', sir, len);
+         displayChar('+');
          else if(p.x >= 575 && p.x <= 625)
-         displayChar('(', sir, len);
+         displayChar('(');
          else if(p.x >= 630 && p.x <= 680)
-         displayChar(')', sir, len);
+         displayChar(')');
          else if(p.x >= 685 && p.x <= 735)
-         displayChar('/', sir, len);
+         displayChar('/');
         
        }  
        else if(p.y >= 740 && p.y <= 800)
        {
         if(p.x >= 190 && p.x <= 240)
-          displayChar('<', sir, len);
+          displayChar('<');
          else if(p.x >= 245 && p.x <= 295)
-         displayChar('*', sir, len);
+         displayChar('*');
          else if(p.x >= 300 && p.x <= 350)
-         displayChar('\'', sir, len);
+         displayChar('\'');
          else if(p.x >= 355 && p.x <= 405)
-         displayChar(':', sir, len);
+         displayChar(':');
          else if(p.x >= 410 && p.x <= 460)
-         displayChar(';', sir, len);
+         displayChar(';');
          else if(p.x >= 465 && p.x <= 515)
-         displayChar('!', sir, len);
+         displayChar('!');
          else if(p.x >= 520 && p.x <= 570)
-         displayChar('?', sir, len);
+         displayChar('?');
          else if(p.x >= 575 && p.x <= 625)
-         displayChar('=', sir, len);
+         displayChar('=');
          else if(p.x >= 630 && p.x <= 680)
-         displayChar('%', sir, len);
+         displayChar('%');
          else if(p.x >= 685 && p.x <= 735)
-         displayChar('>', sir, len);
+         displayChar('>');
        }
        else if(p.y >= 810 && p.y <= 870)
        {
          if(p.x >= 190 && p.x <= 240)
-          displayChar(',', sir, len);
+          displayChar(',');
          else if(p.x >= 630 && p.x <= 680)
          {
-          displayChar('\"', sir, len);
+          displayChar('\"');
          }
        }
        
@@ -3531,14 +3530,87 @@ void GetTasteAtbash()
   }
 }
 
+void enter_key()
+{
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+
+  tft.fillRect(0, 40, 239, 130, RED);
+  tft.setCursor(5, 45);
+  tft.setTextSize(2);
+  tft.setTextColor(WHITE);
+  tft.print("Introduceti cheia");
+
+  tft.fillRect(85, 135, 70, 30, GRAY);
+  tft.setCursor(107, 143);
+  tft.setTextSize(2);
+  tft.setTextColor(BLUE);
+  tft.print("OK");
+
+  while(1)
+  {
+    TSPoint p = ts.getPoint();
+  
+  // we have some minimum pressure we consider 'valid'
+  // pressure of 0 means no pressing!
+    if (p.z > ts.pressureThreshhold) {
+      Serial.print("X = "); Serial.print(p.x);
+      Serial.print("\tY = "); Serial.print(p.y);
+      Serial.print("\tPressure = "); Serial.println(p.z); 
+      if(p.x >= 420 && p.x <= 650 && p.y >= 490 && p.y <= 555)
+      {
+        textbox();
+        afisare_sir();
+        break;
+      }
+    }
+  
+  }
+}
+
+void enter_text()
+{
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+
+  tft.fillRect(0, 40, 239, 130, RED);
+  tft.setCursor(5, 45);
+  tft.setTextSize(2);
+  tft.setTextColor(WHITE);
+  tft.print("Introduceti textul");
+
+  tft.fillRect(85, 135, 70, 30, GRAY);
+  tft.setCursor(107, 143);
+  tft.setTextSize(2);
+  tft.setTextColor(BLUE);
+  tft.print("OK");
+
+  while(1)
+  {
+    TSPoint p = ts.getPoint();
+  
+  // we have some minimum pressure we consider 'valid'
+  // pressure of 0 means no pressing!
+    if (p.z > ts.pressureThreshhold) {
+      Serial.print("X = "); Serial.print(p.x);
+      Serial.print("\tY = "); Serial.print(p.y);
+      Serial.print("\tPressure = "); Serial.println(p.z); 
+      if(p.x >= 420 && p.x <= 650 && p.y >= 490 && p.y <= 555)
+      {
+        textbox();
+        afisare_sir();
+        break;
+      }
+    }
+  
+  }
+}
+
 
 void GetTasteVigenereEncrypt()
 {
-  int mode = 1;
-  char sir[1000] = "", cheie[1000] = "";
-  int len = 0, len_key = 0;
-  bool isKey = true;
-  error_message("Introduceti cheia", sir);
+  resetString();
+  enter_key();
   while(1)
   {
     
@@ -3558,7 +3630,7 @@ void GetTasteVigenereEncrypt()
             textbox();
             len--;
             sir[len] = 0;
-            afisare_sir(sir);
+            afisare_sir();
           }
        else if(p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
        {
@@ -3571,13 +3643,13 @@ void GetTasteVigenereEncrypt()
               sir[i] = 0;
             len = 0;
             isKey = false;
-            error_message("Introduceti textul", sir);
+            enter_text();
             textbox();
           }
           else
           {
             sir[len] = 0;
-            VigenereEncrypt(sir, cheie);
+            VigenereEncrypt();
             break;
           }
        }
@@ -3590,68 +3662,68 @@ void GetTasteVigenereEncrypt()
         
        }
        else if(p.x >= 280 && p.x <= 595 && p.y >= 830 && p.y <= 895)
-        displayChar(' ', sir, len);
+        displayChar(' ');
        else if(p.y >= 600 && p.y <= 660)
        {
          if(p.x >= 190 && p.x <= 240)
-          displayChar('Q', sir, len);
+          displayChar('Q');
          else if(p.x >= 245 && p.x <= 295)
-         displayChar('W', sir, len);
+         displayChar('W');
          else if(p.x >= 300 && p.x <= 350)
-         displayChar('E', sir, len);
+         displayChar('E');
          else if(p.x >= 355 && p.x <= 405)
-         displayChar('R', sir, len);
+         displayChar('R');
          else if(p.x >= 410 && p.x <= 460)
-         displayChar('T', sir, len);
+         displayChar('T');
          else if(p.x >= 465 && p.x <= 515)
-         displayChar('Y', sir, len);
+         displayChar('Y');
          else if(p.x >= 520 && p.x <= 570)
-         displayChar('U', sir, len);
+         displayChar('U');
          else if(p.x >= 575 && p.x <= 625)
-         displayChar('I', sir, len);
+         displayChar('I');
          else if(p.x >= 630 && p.x <= 680)
-         displayChar('O', sir, len);
+         displayChar('O');
          else if(p.x >= 685 && p.x <= 735)
-         displayChar('P', sir, len);
+         displayChar('P');
          
        }
        else if(p.y >= 670 && p.y <= 730)
        {
         if(p.x >= 220 && p.x <= 270)
-        displayChar('A', sir, len);
+        displayChar('A');
         else if(p.x >= 275 && p.x <= 325)
-        displayChar('S', sir, len);
+        displayChar('S');
         else if(p.x >= 330 && p.x <= 380)
-        displayChar('D', sir, len);
+        displayChar('D');
         else if(p.x >= 385 && p.x <= 435)
-        displayChar('F', sir, len);
+        displayChar('F');
         else if(p.x >= 440 && p.x <= 490)
-        displayChar('G', sir, len);
+        displayChar('G');
         else if(p.x >= 495 && p.x <= 545)
-        displayChar('H', sir, len);
+        displayChar('H');
         else if(p.x >= 550 && p.x <= 600)
-        displayChar('J', sir, len);
+        displayChar('J');
         else if(p.x >= 605 && p.x <= 655)
-        displayChar('K', sir, len);
+        displayChar('K');
         else if(p.x >= 660 && p.x <= 710)
-        displayChar('L', sir, len);
+        displayChar('L');
        }
        else if(p.y >= 740 && p.y <= 800)
        {
         if(p.x >= 250 && p.x <= 300)
-        displayChar('Z', sir, len);
+        displayChar('Z');
         else if(p.x >= 305 && p.x <= 355)
-        displayChar('X', sir, len);
+        displayChar('X');
         else if(p.x >= 360 && p.x <= 410)
-        displayChar('C', sir, len);
+        displayChar('C');
         else if(p.x >= 415 && p.x <= 465)
-        displayChar('V', sir, len);
+        displayChar('V');
         else if(p.x >= 470 && p.x <= 520)
-        displayChar('B', sir, len);
+        displayChar('B');
         else if(p.x >= 525 && p.x <= 575)
-        displayChar('N', sir, len);
+        displayChar('N');
         else if(p.x >= 580 && p.x <= 630)
-        displayChar('M', sir, len);
+        displayChar('M');
        }
        
      }
@@ -3662,7 +3734,7 @@ void GetTasteVigenereEncrypt()
             textbox();
             len--;
             sir[len] = 0;
-            afisare_sir(sir);
+            afisare_sir();
         }
        else if(p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
        {
@@ -3674,13 +3746,13 @@ void GetTasteVigenereEncrypt()
               sir[i] = 0;
             len = 0;
             isKey = false;
-            error_message("Introduceti textul", sir);
+            enter_text();
             textbox();
           }
           else
           {
             sir[len] = 0;
-            VigenereEncrypt(sir, cheie);
+            VigenereEncrypt();
             break;
           }
        }
@@ -3690,85 +3762,85 @@ void GetTasteVigenereEncrypt()
         tast_litere();
        }
        else if(p.x >= 280 && p.x <= 595 && p.y >= 830 && p.y <= 895)
-        displayChar(' ', sir, len);
+        displayChar(' ');
        else if(p.y >= 600 && p.y <= 660)
        {
          if(p.x >= 190 && p.x <= 240)
-          displayChar('1', sir, len);
+          displayChar('1');
          else if(p.x >= 245 && p.x <= 295)
-         displayChar('2', sir, len);
+         displayChar('2');
          else if(p.x >= 300 && p.x <= 350)
-         displayChar('3', sir, len);
+         displayChar('3');
          else if(p.x >= 355 && p.x <= 405)
-         displayChar('4', sir, len);
+         displayChar('4');
          else if(p.x >= 410 && p.x <= 460)
-         displayChar('5', sir, len);
+         displayChar('5');
          else if(p.x >= 465 && p.x <= 515)
-         displayChar('6', sir, len);
+         displayChar('6');
          else if(p.x >= 520 && p.x <= 570)
-         displayChar('7', sir, len);
+         displayChar('7');
          else if(p.x >= 575 && p.x <= 625)
-         displayChar('8', sir, len);
+         displayChar('8');
          else if(p.x >= 630 && p.x <= 680)
-         displayChar('9', sir, len);
+         displayChar('9');
          else if(p.x >= 685 && p.x <= 735)
-         displayChar('0', sir, len);
+         displayChar('0');
          
        }
        else if(p.y >= 670 && p.y <= 730)
        {
          if(p.x >= 190 && p.x <= 240)
-          displayChar('@', sir, len);
+          displayChar('@');
          else if(p.x >= 245 && p.x <= 295)
-         displayChar('.', sir, len);
+         displayChar('.');
          else if(p.x >= 300 && p.x <= 350)
-         displayChar('$', sir, len);
+         displayChar('$');
          else if(p.x >= 355 && p.x <= 405)
-         displayChar('_', sir, len);
+         displayChar('_');
          else if(p.x >= 410 && p.x <= 460)
-         displayChar('&', sir, len);
+         displayChar('&');
          else if(p.x >= 465 && p.x <= 515)
-         displayChar('-', sir, len);
+         displayChar('-');
          else if(p.x >= 520 && p.x <= 570)
-         displayChar('+', sir, len);
+         displayChar('+');
          else if(p.x >= 575 && p.x <= 625)
-         displayChar('(', sir, len);
+         displayChar('(');
          else if(p.x >= 630 && p.x <= 680)
-         displayChar(')', sir, len);
+         displayChar(')');
          else if(p.x >= 685 && p.x <= 735)
-         displayChar('/', sir, len);
+         displayChar('/');
         
        }  
        else if(p.y >= 740 && p.y <= 800)
        {
         if(p.x >= 190 && p.x <= 240)
-          displayChar('<', sir, len);
+          displayChar('<');
          else if(p.x >= 245 && p.x <= 295)
-         displayChar('*', sir, len);
+         displayChar('*');
          else if(p.x >= 300 && p.x <= 350)
-         displayChar('\'', sir, len);
+         displayChar('\'');
          else if(p.x >= 355 && p.x <= 405)
-         displayChar(':', sir, len);
+         displayChar(':');
          else if(p.x >= 410 && p.x <= 460)
-         displayChar(';', sir, len);
+         displayChar(';');
          else if(p.x >= 465 && p.x <= 515)
-         displayChar('!', sir, len);
+         displayChar('!');
          else if(p.x >= 520 && p.x <= 570)
-         displayChar('?', sir, len);
+         displayChar('?');
          else if(p.x >= 575 && p.x <= 625)
-         displayChar('=', sir, len);
+         displayChar('=');
          else if(p.x >= 630 && p.x <= 680)
-         displayChar('%', sir, len);
+         displayChar('%');
          else if(p.x >= 685 && p.x <= 735)
-         displayChar('>', sir, len);
+         displayChar('>');
        }
        else if(p.y >= 810 && p.y <= 870)
        {
          if(p.x >= 190 && p.x <= 240)
-          displayChar(',', sir, len);
+          displayChar(',');
          else if(p.x >= 630 && p.x <= 680)
          {
-          displayChar('\"', sir, len);
+          displayChar('\"');
          }
        }
        
@@ -3785,11 +3857,8 @@ void GetTasteVigenereEncrypt()
 
 void GetTasteVigenereDecrypt()
 {
-  char sir[1000] = "", cheie[1000] = "";
-  int len = 0, len_key = 0;
-  bool isKey = true;
-  error_message("Introduceti cheia", sir);
-  int mode = 1;
+  resetString();
+  enter_key();
   while(1)
   {
     
@@ -3809,7 +3878,7 @@ void GetTasteVigenereDecrypt()
             textbox();
             len--;
             sir[len] = 0;
-            afisare_sir(sir);
+            afisare_sir();
           }
        else if(p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
        {
@@ -3822,13 +3891,13 @@ void GetTasteVigenereDecrypt()
               sir[i] = 0;
             len = 0;
             isKey = false;
-            error_message("Introduceti textul", sir);
+            enter_text();
             textbox();
           }
           else
           {
             sir[len] = 0;
-            VigenereDecrypt(sir, cheie);
+            VigenereDecrypt();
             break;
           }
        }
@@ -3841,68 +3910,68 @@ void GetTasteVigenereDecrypt()
         
        }
        else if(p.x >= 280 && p.x <= 595 && p.y >= 830 && p.y <= 895)
-        displayChar(' ', sir, len);
+        displayChar(' ');
        else if(p.y >= 600 && p.y <= 660)
        {
          if(p.x >= 190 && p.x <= 240)
-          displayChar('Q', sir, len);
+          displayChar('Q');
          else if(p.x >= 245 && p.x <= 295)
-         displayChar('W', sir, len);
+         displayChar('W');
          else if(p.x >= 300 && p.x <= 350)
-         displayChar('E', sir, len);
+         displayChar('E');
          else if(p.x >= 355 && p.x <= 405)
-         displayChar('R', sir, len);
+         displayChar('R');
          else if(p.x >= 410 && p.x <= 460)
-         displayChar('T', sir, len);
+         displayChar('T');
          else if(p.x >= 465 && p.x <= 515)
-         displayChar('Y', sir, len);
+         displayChar('Y');
          else if(p.x >= 520 && p.x <= 570)
-         displayChar('U', sir, len);
+         displayChar('U');
          else if(p.x >= 575 && p.x <= 625)
-         displayChar('I', sir, len);
+         displayChar('I');
          else if(p.x >= 630 && p.x <= 680)
-         displayChar('O', sir, len);
+         displayChar('O');
          else if(p.x >= 685 && p.x <= 735)
-         displayChar('P', sir, len);
+         displayChar('P');
          
        }
        else if(p.y >= 670 && p.y <= 730)
        {
         if(p.x >= 220 && p.x <= 270)
-        displayChar('A', sir, len);
+        displayChar('A');
         else if(p.x >= 275 && p.x <= 325)
-        displayChar('S', sir, len);
+        displayChar('S');
         else if(p.x >= 330 && p.x <= 380)
-        displayChar('D', sir, len);
+        displayChar('D');
         else if(p.x >= 385 && p.x <= 435)
-        displayChar('F', sir, len);
+        displayChar('F');
         else if(p.x >= 440 && p.x <= 490)
-        displayChar('G', sir, len);
+        displayChar('G');
         else if(p.x >= 495 && p.x <= 545)
-        displayChar('H', sir, len);
+        displayChar('H');
         else if(p.x >= 550 && p.x <= 600)
-        displayChar('J', sir, len);
+        displayChar('J');
         else if(p.x >= 605 && p.x <= 655)
-        displayChar('K', sir, len);
+        displayChar('K');
         else if(p.x >= 660 && p.x <= 710)
-        displayChar('L', sir, len);
+        displayChar('L');
        }
        else if(p.y >= 740 && p.y <= 800)
        {
         if(p.x >= 250 && p.x <= 300)
-        displayChar('Z', sir, len);
+        displayChar('Z');
         else if(p.x >= 305 && p.x <= 355)
-        displayChar('X', sir, len);
+        displayChar('X');
         else if(p.x >= 360 && p.x <= 410)
-        displayChar('C', sir, len);
+        displayChar('C');
         else if(p.x >= 415 && p.x <= 465)
-        displayChar('V', sir, len);
+        displayChar('V');
         else if(p.x >= 470 && p.x <= 520)
-        displayChar('B', sir, len);
+        displayChar('B');
         else if(p.x >= 525 && p.x <= 575)
-        displayChar('N', sir, len);
+        displayChar('N');
         else if(p.x >= 580 && p.x <= 630)
-        displayChar('M', sir, len);
+        displayChar('M');
        }
        
      }
@@ -3913,7 +3982,7 @@ void GetTasteVigenereDecrypt()
             textbox();
             len--;
             sir[len] = 0;
-            afisare_sir(sir);
+            afisare_sir();
         }
        else if(p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
        {
@@ -3925,12 +3994,12 @@ void GetTasteVigenereDecrypt()
               sir[i] = 0;
             len = 0;
             isKey = false;
-            error_message("Introduceti textul", sir);
+            enter_text();
             textbox();
           }
           else
           {
-            VigenereDecrypt(sir, cheie);
+            VigenereDecrypt();
             break;
           }
        }
@@ -3940,85 +4009,85 @@ void GetTasteVigenereDecrypt()
         tast_litere();
        }
        else if(p.x >= 280 && p.x <= 595 && p.y >= 830 && p.y <= 895)
-        displayChar(' ', sir, len);
+        displayChar(' ');
        else if(p.y >= 600 && p.y <= 660)
        {
          if(p.x >= 190 && p.x <= 240)
-          displayChar('1', sir, len);
+          displayChar('1');
          else if(p.x >= 245 && p.x <= 295)
-         displayChar('2', sir, len);
+         displayChar('2');
          else if(p.x >= 300 && p.x <= 350)
-         displayChar('3', sir, len);
+         displayChar('3');
          else if(p.x >= 355 && p.x <= 405)
-         displayChar('4', sir, len);
+         displayChar('4');
          else if(p.x >= 410 && p.x <= 460)
-         displayChar('5', sir, len);
+         displayChar('5');
          else if(p.x >= 465 && p.x <= 515)
-         displayChar('6', sir, len);
+         displayChar('6');
          else if(p.x >= 520 && p.x <= 570)
-         displayChar('7', sir, len);
+         displayChar('7');
          else if(p.x >= 575 && p.x <= 625)
-         displayChar('8', sir, len);
+         displayChar('8');
          else if(p.x >= 630 && p.x <= 680)
-         displayChar('9', sir, len);
+         displayChar('9');
          else if(p.x >= 685 && p.x <= 735)
-         displayChar('0', sir, len);
+         displayChar('0');
          
        }
        else if(p.y >= 670 && p.y <= 730)
        {
          if(p.x >= 190 && p.x <= 240)
-          displayChar('@', sir, len);
+          displayChar('@');
          else if(p.x >= 245 && p.x <= 295)
-         displayChar('.', sir, len);
+         displayChar('.');
          else if(p.x >= 300 && p.x <= 350)
-         displayChar('$', sir, len);
+         displayChar('$');
          else if(p.x >= 355 && p.x <= 405)
-         displayChar('_', sir, len);
+         displayChar('_');
          else if(p.x >= 410 && p.x <= 460)
-         displayChar('&', sir, len);
+         displayChar('&');
          else if(p.x >= 465 && p.x <= 515)
-         displayChar('-', sir, len);
+         displayChar('-');
          else if(p.x >= 520 && p.x <= 570)
-         displayChar('+', sir, len);
+         displayChar('+');
          else if(p.x >= 575 && p.x <= 625)
-         displayChar('(', sir, len);
+         displayChar('(');
          else if(p.x >= 630 && p.x <= 680)
-         displayChar(')', sir, len);
+         displayChar(')');
          else if(p.x >= 685 && p.x <= 735)
-         displayChar('/', sir, len);
+         displayChar('/');
         
        }  
        else if(p.y >= 740 && p.y <= 800)
        {
         if(p.x >= 190 && p.x <= 240)
-          displayChar('<', sir, len);
+          displayChar('<');
          else if(p.x >= 245 && p.x <= 295)
-         displayChar('*', sir, len);
+         displayChar('*');
          else if(p.x >= 300 && p.x <= 350)
-         displayChar('\'', sir, len);
+         displayChar('\'');
          else if(p.x >= 355 && p.x <= 405)
-         displayChar(':', sir, len);
+         displayChar(':');
          else if(p.x >= 410 && p.x <= 460)
-         displayChar(';', sir, len);
+         displayChar(';');
          else if(p.x >= 465 && p.x <= 515)
-         displayChar('!', sir, len);
+         displayChar('!');
          else if(p.x >= 520 && p.x <= 570)
-         displayChar('?', sir, len);
+         displayChar('?');
          else if(p.x >= 575 && p.x <= 625)
-         displayChar('=', sir, len);
+         displayChar('=');
          else if(p.x >= 630 && p.x <= 680)
-         displayChar('%', sir, len);
+         displayChar('%');
          else if(p.x >= 685 && p.x <= 735)
-         displayChar('>', sir, len);
+         displayChar('>');
        }
        else if(p.y >= 810 && p.y <= 870)
        {
          if(p.x >= 190 && p.x <= 240)
-          displayChar(',', sir, len);
+          displayChar(',');
          else if(p.x >= 630 && p.x <= 680)
          {
-          displayChar('\"', sir, len);
+          displayChar('\"');
          }
        }
        
