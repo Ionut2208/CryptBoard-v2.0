@@ -769,9 +769,9 @@ void CypherMenuWiki()
   }
 }
 
-char sir[100], cheie[100];
+char sir[500], cheie[500];
 int mode = 1, len, len_key;
-bool isKey = true;
+bool isKey = true, smaller = false, isVig = false;
 
 void CypherMenuWork()
 {
@@ -1011,7 +1011,7 @@ void tast_litere()
 {
   pinMode(A1, OUTPUT);
   pinMode(A2, OUTPUT);
-  tft.fillRect(5, 185, 235, 135, BLACK);
+  tft.fillRect(0, 170, 239, 150, BLACK);
   tft.drawRect(5, 185, 185, 120, YELLOW);
   tft.setCursor(10, 190);
   tft.setTextColor(WHITE);
@@ -1051,6 +1051,15 @@ void tast_litere()
   tft.setTextSize(2);
   tft.setCursor(5, 5);
   tft.print("BACK");
+
+
+  tft.fillRect(195, 171, 45, 25, GREEN);
+  tft.setTextSize(3);
+  tft.setTextColor(RED);
+  tft.setCursor(210, 173);
+  tft.print('-');
+
+  tft.setTextSize(2);
   
 }
 
@@ -1058,7 +1067,7 @@ void tast_cif_simb()
 {
   pinMode(A1, OUTPUT);
   pinMode(A2, OUTPUT);
-  tft.fillRect(5, 185, 235, 135, BLACK);
+  tft.fillRect(0, 170, 239, 150, BLACK);
   tft.drawRect(5, 185, 185, 120, YELLOW);
   tft.setCursor(10, 190);
   tft.setTextColor(WHITE);
@@ -1096,6 +1105,14 @@ void tast_cif_simb()
   tft.setTextSize(3);
   tft.print("SPACE");
   tft.drawRect(45, 275, 100, 30, YELLOW);
+
+  tft.fillRect(195, 171, 45, 25, GREEN);
+  tft.setTextSize(3);
+  tft.setTextColor(RED);
+  tft.setCursor(210, 173);
+  tft.print('-');
+
+  tft.setTextSize(2);
 }
 
 void afisare_sir()
@@ -1103,7 +1120,16 @@ void afisare_sir()
   pinMode(A1, OUTPUT);
   pinMode(A2, OUTPUT);
   tft.setTextColor(RED);
-  tft.setTextSize(2);
+  if(len == 134)
+  {
+    textbox();
+    smaller = true;
+  }
+    
+  if(smaller == true)
+    tft.setTextSize(1);
+  else
+    tft.setTextSize(2);
   tft.setCursor(5, 45);
   tft.print(sir);
 }
@@ -1112,10 +1138,14 @@ void displayChar(char x)
 {
   pinMode(A1, OUTPUT);
   pinMode(A2, OUTPUT);
-  tft.setTextColor(RED);
-  tft.setTextSize(2);
-  sir[len++] = x;
-  afisare_sir();
+  if(isVig == true && isKey == true && !litera(x))
+    error_message();
+  else
+  {
+    sir[len++] = x;
+    afisare_sir();
+  }
+  
       
 }
 
@@ -1125,11 +1155,14 @@ void textbox()
   pinMode(A2, OUTPUT);
   
   tft.fillRect(0, 40, 239, 130, WHITE);
+  
+
 }
 
 void MorseEncrypt()
 {
-  String result[100] = "";
+  tft.setTextSize(2);
+  String result[200] = "";
   textbox();
   for(int i = 0; sir[i] != 0; i++)
   {
@@ -1225,6 +1258,8 @@ void resetString()
   len_key = 0;
   mode = 1;
   isKey = true;
+  smaller = false;
+  isVig = false;
 }
 
 void GetTasteMorseEncrypt()
@@ -1441,8 +1476,18 @@ void GetTasteMorseEncrypt()
           CypherMenuWork();
           break;
          }
+     else if(p.x >= 780 && p.x <= 915 && p.y >= 595 && p.y <= 645)
+     {
+        smaller = true;
+        if(mode == 1)
+          tast_litere();
+        else
+          tast_cif_simb();
+        textbox();
+        afisare_sir();
+     }
     }
-    delay(200);
+   delay(200);
   }
 }
 
@@ -1602,6 +1647,13 @@ void TastMorseDecrypt()
   tft.print('-');
   tft.setCursor(145, 215);
   tft.print('/');
+
+  tft.fillRect(0, 40, 239, 130, WHITE);
+  tft.fillRect(195, 171, 45, 25, GREEN);
+  tft.setTextSize(3);
+  tft.setTextColor(RED);
+  tft.setCursor(210, 173);
+  tft.print('-');
   
 }
 
@@ -1682,6 +1734,13 @@ void GetTasteMorseDecrypt()
           CypherMenuWork();
           break;
          }
+    else if(p.x >= 780 && p.x <= 915 && p.y >= 595 && p.y <= 645)
+     {
+        smaller = true;
+        TastMorseDecrypt();
+        textbox();
+        afisare_sir();
+     }
     delay(200);
   }
 }
@@ -1956,6 +2015,16 @@ void GetTasteCesarEncrypt()
           CypherMenuWork();
           break;
          }
+     else if(p.x >= 780 && p.x <= 915 && p.y >= 595 && p.y <= 645)
+     {
+        smaller = true;
+        if(mode == 1)
+          tast_litere();
+        else
+          tast_cif_simb();
+        textbox();
+        afisare_sir();
+     }
     }
     delay(200);
   }
@@ -2174,6 +2243,16 @@ void GetTasteCesarDecrypt()
           CypherMenuWork();
           break;
          }
+    else if(p.x >= 780 && p.x <= 915 && p.y >= 595 && p.y <= 645)
+     {
+        smaller = true;
+        if(mode == 1)
+          tast_litere();
+        else
+          tast_cif_simb();
+        textbox();
+        afisare_sir();
+     }
     }
     delay(200);
   }
@@ -2465,6 +2544,16 @@ void GetTasteHexEncrypt()
           CypherMenuWork();
           break;
          }
+    else if(p.x >= 780 && p.x <= 915 && p.y >= 595 && p.y <= 645)
+     {
+        smaller = true;
+        if(mode == 1)
+          tast_litere();
+        else
+          tast_cif_simb();
+        textbox();
+        afisare_sir();
+     }
     }
     delay(200);
   }
@@ -2683,6 +2772,16 @@ void GetTasteHexDecrypt()
           CypherMenuWork();
           break;
          }
+     else if(p.x >= 780 && p.x <= 915 && p.y >= 595 && p.y <= 645)
+     {
+        smaller = true;
+        if(mode == 1)
+          tast_litere();
+        else
+          tast_cif_simb();
+        textbox();
+        afisare_sir();
+     }
     }
     delay(200);
   }
@@ -2972,6 +3071,16 @@ void GetTasteBinaryEncrypt()
           CypherMenuWork();
           break;
          }
+     else if(p.x >= 780 && p.x <= 915 && p.y >= 595 && p.y <= 645)
+     {
+        smaller = true;
+        if(mode == 1)
+          tast_litere();
+        else
+          tast_cif_simb();
+        textbox();
+        afisare_sir();
+     }
     }
     delay(200);
   }
@@ -3190,6 +3299,16 @@ void GetTasteBinaryDecrypt()
           CypherMenuWork();
           break;
          }
+    else if(p.x >= 780 && p.x <= 915 && p.y >= 595 && p.y <= 645)
+     {
+        smaller = true;
+        if(mode == 1)
+          tast_litere();
+        else
+          tast_cif_simb();
+        textbox();
+        afisare_sir();
+     }
     }
     delay(200);
   }
@@ -3525,6 +3644,16 @@ void GetTasteAtbash()
           CypherMenuWork();
           break;
          }
+    else if(p.x >= 780 && p.x <= 915 && p.y >= 595 && p.y <= 645)
+     {
+        smaller = true;
+        if(mode == 1)
+          tast_litere();
+        else
+          tast_cif_simb();
+        textbox();
+        afisare_sir();
+     }
     }
     delay(200);
   }
@@ -3609,7 +3738,9 @@ void enter_text()
 
 void GetTasteVigenereEncrypt()
 {
+  
   resetString();
+  isVig = true;
   enter_key();
   while(1)
   {
@@ -3850,6 +3981,16 @@ void GetTasteVigenereEncrypt()
           CypherMenuWork();
           break;
          }
+     else if(p.x >= 780 && p.x <= 915 && p.y >= 595 && p.y <= 645)
+     {
+        smaller = true;
+        if(mode == 1)
+          tast_litere();
+        else
+          tast_cif_simb();
+        textbox();
+        afisare_sir();
+     }
     }
     delay(200);
   }
@@ -3858,6 +3999,7 @@ void GetTasteVigenereEncrypt()
 void GetTasteVigenereDecrypt()
 {
   resetString();
+  isVig = true;
   enter_key();
   while(1)
   {
@@ -4097,6 +4239,16 @@ void GetTasteVigenereDecrypt()
           CypherMenuWork();
           break;
          }
+    else if(p.x >= 780 && p.x <= 915 && p.y >= 595 && p.y <= 645)
+     {
+        smaller = true;
+        if(mode == 1)
+          tast_litere();
+        else
+          tast_cif_simb();
+        textbox();
+        afisare_sir();
+     }
     }
     delay(200);
   }
