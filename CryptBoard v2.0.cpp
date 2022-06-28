@@ -1162,21 +1162,28 @@ void textbox()
 void MorseEncrypt()
 {
   tft.setTextSize(2);
-  String result[200] = "";
+  int l = 0, val_endl = 19;
+  String result[300] = "";
   textbox();
   for(int i = 0; sir[i] != 0; i++)
   {
     result[i] = morse(sir[i]);
+    l += result[i].length();
   }
   tft.setCursor(5, 45);
+  if(smaller == true || l >= 134)
+  {
+    tft.setTextSize(1);
+    val_endl = 35;
+  }
   int lungRand = 0;
   for(int i = 0; result[i] != 0; i++)
   {
     lungRand += result[i].length();
-    if(lungRand <= 19)
+    if(lungRand <= val_endl)
     {
       tft.print(result[i]);
-      if(lungRand < 19)
+      if(lungRand < val_endl)
       {
         tft.print(' ');
         lungRand++;
@@ -1660,6 +1667,10 @@ void TastMorseDecrypt()
 void MorseDecrypt()
 {
   char result[50];
+  if(strlen(sir) > 600)
+    tft.setTextSize(1);
+  else
+    tft.setTextSize(2);
   int k = 0;
   char *tok = strtok(sir, " ");
   while(tok)
@@ -2277,12 +2288,20 @@ int HexValue(char c)
 void HexEncrypt()
 {
   textbox();
+  int limit = 7;
+  if(strlen(sir) > 45)
+  {
+    tft.setTextSize(1);
+    limit = 14;
+  }   
+  else
+    tft.setTextSize(2);
   tft.setCursor(5, 45);
   int nr = 0;
   for(int i = 0; sir[i] != 0; i++)
   {
     nr++;
-    if(nr == 7)
+    if(nr == limit)
     {
       nr = 1;
       tft.print('\n');
@@ -2311,6 +2330,10 @@ void HexDecrypt()
 {
   textbox();
   tft.setCursor(5, 45);
+  if(strlen(sir) > 350)
+    tft.setTextSize(1);
+  else
+    tft.setTextSize(2);
   for(int i = 0; sir[i] != 0; i += 3)
   {
     tft.print((char) (HexValue(sir[i]) * 16 + HexValue(sir[i + 1])));
@@ -2792,10 +2815,16 @@ void BinaryEncrypt()
   textbox();
   tft.setCursor(5, 45);
   int nr = 0;
+  int limit = 3;
+  if(strlen(sir) > 16)
+  {
+    tft.setTextSize(1);
+    limit = 5;
+  }
   for(int i = 0; sir[i] != 0; i++)
   {
     nr++;
-    if(nr == 3)
+    if(nr == limit)
     {
       nr = 1;
       tft.print('\n');
@@ -2838,6 +2867,10 @@ void BinaryDecrypt()
 {
   textbox();
   tft.setCursor(5, 45);
+  if(strlen(sir) > 1500)
+    tft.setTextSize(1);
+  else
+    tft.setTextSize(2);
   
   for(int i = 0; sir[i] != 0; i += 9)
   {
