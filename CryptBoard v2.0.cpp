@@ -1,9 +1,6 @@
-#include <Adafruit_TFTLCD.h>
-#include <Adafruit_GFX.h>
 #include <MCUFRIEND_kbv.h>
-#include <gfxfont.h>
-#include <stdint.h>
 #include "TouchScreen.h"
+#include <EEPROM.h>
 
 #define LCD_CS A3
 #define LCD_CD A2 
@@ -1163,7 +1160,9 @@ void MorseEncrypt()
 {
   tft.setTextSize(2);
   int l = 0, val_endl = 19;
-  String result[300] = "";
+  String result[100];
+  for(int i = 0; i < 100; i++)
+      result[i] = "\0";
   textbox();
   for(int i = 0; sir[i] != 0; i++)
   {
