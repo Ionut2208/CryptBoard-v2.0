@@ -766,7 +766,7 @@ void CypherMenuWiki()
   }
 }
 
-char sir[500], cheie[500];
+char sir[300], cheie[300];
 int mode = 1, len, len_key;
 bool isKey = true, smaller = false, isVig = false;
 
@@ -849,6 +849,7 @@ void CypherMenuWork()
     
     }
   }
+  return;
 }
 
 void CypherMenuPlay()
@@ -885,9 +886,79 @@ void CypherMenuPlay()
   tft.print("BACK");
 }
 
+void ProfileMenu()
+{
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+  
+  tft.fillScreen(BLUE);
+
+  tft.fillRect(0, 0, 60, 20, RED);
+  tft.setTextColor(WHITE);
+  tft.setTextSize(2);
+  tft.setCursor(5, 5);
+  tft.print("BACK");
+
+  tft.fillRect(0, 40, 60, 60, GRAY);
+  tft.fillRect(25, 50, 10, 40, BLACK);
+  tft.fillRect(10, 65, 40, 10, BLACK);
+
+  tft.setCursor(75, 65);
+  tft.setTextSize(2);
+  tft.setTextColor(WHITE);
+  tft.print("Adauga profil");
+
+  tft.fillRect(0, 120, 60, 60, GRAY);
+  tft.fillRect(10, 145, 20, 10, BLACK);
+  tft.fillTriangle(30, 135, 30, 165, 50, 150, BLACK);
+  tft.setCursor(70, 145);
+  tft.print("Incarca profil");
+
+  tft.fillRect(0, 200, 60, 60, GRAY);
+  int x1 = 5, y1 = 210, x2 = 50, y2 = 250;
+  for(int i = 1; i <= 7; i++)
+    tft.drawLine(x1++, y1, x2++, y2, BLACK);
+  x1 = 50;
+  y1 = 210;
+  x2 = 5;
+  y2 = 250;
+  for(int i = 1; i <= 7; i++)
+    tft.drawLine(x1++, y1, x2++, y2, BLACK);
+  tft.setCursor(75, 225);
+  tft.print("Sterge profil");
+}
+
+void getTasteProfileMenu()
+{
+  while(1)
+  {
+    TSPoint p = ts.getPoint();
+    if(p.z > ts.pressureThreshhold)
+    {
+      Serial.print(p.x);
+      Serial.print(' ');
+      Serial.print(p.y);
+      Serial.print('\n');
+      if(p.x >= 160 && p.x <= 325)
+      {
+        if(p.y >= 260 && p.y <= 390)
+          Serial.print("add\n");
+        else if(p.y >= 445 && p.y <= 575)
+          Serial.print("load\n");
+        else if(p.y >= 630 && p.y <= 760)
+          Serial.print("delete\n");
+      }
+    }
+    delay(300);
+  }
+  
+  
+}
+
 void Play()
 {
-  CypherMenuPlay();
+  ProfileMenu();
+  getTasteProfileMenu();
 }
 
 String morse(char c)
@@ -1210,7 +1281,7 @@ void MorseEncrypt()
           CypherMenuWork();
           break;
          }
-    }
+    } 
     
   }
     
