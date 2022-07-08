@@ -676,14 +676,6 @@ void printCoord()
   Serial.print('\n');
 }
 
-struct profil
-{
-  char Username[50];
-  int HighScoreMorse, HighScoreCesar, HighScoreHex, HighScoreBinary, HighScoreVigenere, HighScoreAtbash;
-  int Level;
-  int FavoriteCypher;
-  
-}user[3];
 
 void CypherMenuWiki()
 {
@@ -886,11 +878,133 @@ void CypherMenuPlay()
   tft.print("BACK");
 }
 
+void TastLitereProfil()
+{
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+  tft.fillRect(0, 170, 239, 150, BLUE);
+  tft.drawRect(5, 185, 185, 120, YELLOW);
+  tft.setCursor(10, 190);
+  tft.setTextColor(WHITE);
+  tft.setTextSize(3);
+  tft.println("QWERTYUIOP");
+  tft.setCursor(20, 220);
+  tft.setTextColor(WHITE);
+  tft.setTextSize(3);
+  tft.println("ASDFGHJKL");
+  tft.setCursor(30, 250);
+  tft.setTextColor(WHITE);
+  tft.setTextSize(3);
+  tft.println("ZXCVBNM");
+  tft.fillRect(195, 280, 40, 30, GRAY);
+  tft.setCursor(200, 285);
+  tft.setTextColor(GREEN);
+  tft.setTextSize(3);
+  tft.print("OK");
+  tft.fillRect(195, 200, 40, 30, GRAY);
+  tft.setCursor(200, 205);
+  tft.setTextColor(RED);
+  tft.setTextSize(3);
+  tft.print("<-");
+  tft.fillRect(195, 240, 40, 30, GRAY);
+  tft.setCursor(200, 245);
+  tft.setTextColor(MAGENTA);
+  tft.setTextSize(3);
+  tft.print("?1");
+  tft.setCursor(50, 280);
+  tft.setTextColor(BLACK);
+  tft.setTextSize(3);
+  tft.print("SPACE");
+  tft.drawRect(45, 275, 100, 30, YELLOW);
+
+  tft.fillRect(0, 0, 60, 20, RED);
+  tft.setTextColor(WHITE);
+  tft.setTextSize(2);
+  tft.setCursor(5, 5);
+  tft.print("BACK");
+
+  tft.setTextSize(2);
+
+}
+
+void TastCifProfil()
+{
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+  tft.fillRect(0, 170, 239, 150, BLUE);
+  tft.drawRect(5, 185, 185, 120, YELLOW);
+  tft.setCursor(10, 190);
+  tft.setTextColor(WHITE);
+  tft.setTextSize(3);
+  tft.println("1234567890");
+  tft.setCursor(10, 220);
+  tft.setTextColor(WHITE);
+  tft.setTextSize(3);
+  tft.println("@.$_&-+()/");
+  tft.setCursor(10, 250);
+  tft.setTextColor(WHITE);
+  tft.setTextSize(3);
+  tft.println("<*':;!?=%>");
+  tft.setCursor(10, 280);
+  tft.print(',');
+  tft.setCursor(150, 280);
+  tft.print('\"');
+  tft.fillRect(195, 280, 40, 30, GRAY);
+  tft.setCursor(200, 285);
+  tft.setTextColor(GREEN);
+  tft.setTextSize(3);
+  tft.print("OK");
+  tft.fillRect(195, 200, 40, 30, GRAY);
+  tft.setCursor(200, 205);
+  tft.setTextColor(RED);
+  tft.setTextSize(3);
+  tft.print("<-");
+  tft.fillRect(195, 240, 40, 30, GRAY);
+  tft.setCursor(200, 245);
+  tft.setTextColor(MAGENTA);
+  tft.setTextSize(3);
+  tft.print("AB");
+  tft.setCursor(52, 280);
+  tft.setTextColor(BLACK);
+  tft.setTextSize(3);
+  tft.print("SPACE");
+  tft.drawRect(45, 275, 100, 30, YELLOW);
+
+  tft.setTextSize(2);
+}
+
+void textboxPlay()
+{
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+
+  tft.fillRect(0, 70, 239, 100, WHITE);
+  tft.fillRect(0, 25, 239, 40, BLUE);
+
+
+}
+
+void textboxUser()
+{
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+
+  tft.fillRect(0, 50, 240, 30, WHITE);
+}
+
+void textboxPass()
+{
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+
+  tft.fillRect(0, 135, 240, 30, WHITE);
+}
+
 void ProfileMenu()
 {
   pinMode(A1, OUTPUT);
   pinMode(A2, OUTPUT);
-  
+
   tft.fillScreen(BLUE);
 
   tft.fillRect(0, 0, 60, 20, RED);
@@ -916,49 +1030,1452 @@ void ProfileMenu()
 
   tft.fillRect(0, 200, 60, 60, GRAY);
   int x1 = 5, y1 = 210, x2 = 50, y2 = 250;
-  for(int i = 1; i <= 7; i++)
+  for (int i = 1; i <= 7; i++)
     tft.drawLine(x1++, y1, x2++, y2, BLACK);
   x1 = 50;
   y1 = 210;
   x2 = 5;
   y2 = 250;
-  for(int i = 1; i <= 7; i++)
+  for (int i = 1; i <= 7; i++)
     tft.drawLine(x1++, y1, x2++, y2, BLACK);
   tft.setCursor(75, 225);
   tft.print("Sterge profil");
+
+  getTastePlay();
 }
 
-void getTasteProfileMenu()
+struct profil
 {
-  while(1)
+  char username[10], parola[15];
+  int HighScoreMorse = 0, HighScoreCesar = 0, HighScoreHex = 0, HighScoreBinary = 0, HighScoreVigenere = 0, HighScoreAtbash = 0;
+  int Level = 1, XPLevel = 0;
+  int username_len = 0, password_len = 0;
+
+} user[4]; ///3 slot-uri + 1 profil pentru verificare parola
+
+void afisareSirProfil(int slot, bool isPassword)
+{
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+  tft.setTextColor(BLACK);
+  tft.setTextSize(2);
+
+  if (isPassword)
+  {
+    tft.setCursor(5, 143);
+    for (int i = 0; i < user[slot - 1].password_len; i++)
+      tft.print('*');
+  }
+  else
+  {
+    tft.setCursor(5, 57);
+    for (int i = 0; i < user[slot - 1].username_len; i++)
+      tft.print(user[slot - 1].username[i]);
+  }
+}
+
+void displayUserAndPass(int slot, char c, bool isPassword)
+{
+  if (isPassword)
+    user[slot - 1].parola[user[slot - 1].password_len++] = c;
+  else
+    user[slot - 1].username[user[slot - 1].username_len++] = c;
+  afisareSirProfil(slot, isPassword);
+}
+
+void CreateProfile(int slot)
+{
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+
+
+
+  tft.fillScreen(BLUE);
+  tft.fillRect(0, 0, 60, 20, RED);
+  tft.setTextColor(WHITE);
+  tft.setTextSize(2);
+  tft.setCursor(5, 5);
+  tft.print("BACK");
+  tft.setCursor(0, 30);
+  tft.setTextSize(2);
+  tft.print("Username");
+  tft.fillRect(0, 50, 240, 30, WHITE);
+  tft.setCursor(0, 115);
+  tft.print("Parola");
+  tft.fillRect(0, 135, 240, 30, WHITE);
+  TastLitereProfil();
+  GetTasteNewProfile(slot);
+
+
+}
+
+void MeniuAdaugaProfil()
+{
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+
+  tft.fillScreen(BLUE);
+
+  tft.fillRect(0, 0, 60, 20, RED);
+  tft.setTextColor(WHITE);
+  tft.setTextSize(2);
+  tft.setCursor(5, 5);
+  tft.print("BACK");
+
+  tft.drawRect(0, 40, 240, 80, YELLOW);
+  tft.drawRect(0, 130, 240, 80, YELLOW);
+  tft.drawRect(0, 220, 240, 80, YELLOW);
+
+  if (EEPROM.read(0) == 0)
+  {
+    tft.setCursor(60, 70);
+    tft.setTextSize(2);
+    tft.setTextColor(WHITE);
+    tft.print("(slot gol)");
+  }
+  else
+  {
+
+    profil var;
+    EEPROM.get(4, var);
+    tft.setCursor(60, 70);
+    tft.setTextSize(2);
+    tft.setTextColor(WHITE);
+    tft.print(var.username);
+    Serial.print(var.username);
+  }
+
+  if (EEPROM.read(1) == 0)
+  {
+    tft.setCursor(60, 160);
+    tft.print("(slot gol)");
+  }
+  else
+  {
+
+    profil var;
+    int location = 4;
+    location += sizeof(var);
+    EEPROM.get(location, var);
+    tft.setCursor(60, 160);
+    tft.setTextSize(2);
+    tft.setTextColor(WHITE);
+    tft.print(var.username);
+  }
+
+  if (EEPROM.read(2) == 0)
+  {
+    tft.setCursor(60, 250);
+    tft.print("(slot gol)");
+  }
+  else
+  {
+
+    profil var;
+    int location = 4;
+    location += 2 * sizeof(var);
+    EEPROM.get(location, var);
+    tft.setCursor(60, 250);
+    tft.setTextSize(2);
+    tft.setTextColor(WHITE);
+    tft.print(var.username);
+  }
+  GetTasteMeniuAdd();
+}
+
+
+void MeniuIncarcaProfil()
+{
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+
+  tft.fillScreen(BLUE);
+
+  tft.fillRect(0, 0, 60, 20, RED);
+  tft.setTextColor(WHITE);
+  tft.setTextSize(2);
+  tft.setCursor(5, 5);
+  tft.print("BACK");
+
+  tft.drawRect(0, 40, 240, 80, YELLOW);
+  tft.drawRect(0, 130, 240, 80, YELLOW);
+  tft.drawRect(0, 220, 240, 80, YELLOW);
+
+  if (EEPROM.read(0) == 0)
+  {
+    tft.setCursor(60, 70);
+    tft.setTextSize(2);
+    tft.setTextColor(WHITE);
+    tft.print("(slot gol)");
+  }
+  else
+  {
+
+    profil var;
+    EEPROM.get(4, var);
+    tft.setCursor(60, 70);
+    tft.setTextSize(2);
+    tft.setTextColor(WHITE);
+    tft.print(var.username);
+    Serial.print(var.username);
+  }
+
+  if (EEPROM.read(1) == 0)
+  {
+    tft.setCursor(60, 160);
+    tft.print("(slot gol)");
+  }
+  else
+  {
+
+    profil var;
+    int location = 4;
+    location += sizeof(var);
+    EEPROM.get(location, var);
+    tft.setCursor(60, 160);
+    tft.setTextSize(2);
+    tft.setTextColor(WHITE);
+    tft.print(var.username);
+  }
+
+  if (EEPROM.read(2) == 0)
+  {
+    tft.setCursor(60, 250);
+    tft.print("(slot gol)");
+  }
+  else
+  {
+
+    profil var;
+    int location = 4;
+    location += 2 * sizeof(var);
+    EEPROM.get(location, var);
+    tft.setCursor(60, 250);
+    tft.setTextSize(2);
+    tft.setTextColor(WHITE);
+    tft.print(var.username);
+  }
+  GetTasteMeniuLoad();
+}
+
+void MeniuStergeProfil()
+{
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+
+  tft.fillScreen(BLUE);
+
+  tft.fillRect(0, 0, 60, 20, RED);
+  tft.setTextColor(WHITE);
+  tft.setTextSize(2);
+  tft.setCursor(5, 5);
+  tft.print("BACK");
+
+  tft.drawRect(0, 40, 240, 80, YELLOW);
+  tft.drawRect(0, 130, 240, 80, YELLOW);
+  tft.drawRect(0, 220, 240, 80, YELLOW);
+
+  if (EEPROM.read(0) == 0)
+  {
+    tft.setCursor(60, 70);
+    tft.setTextSize(2);
+    tft.setTextColor(WHITE);
+    tft.print("(slot gol)");
+  }
+  else
+  {
+
+    profil var;
+    EEPROM.get(4, var);
+    tft.setCursor(60, 70);
+    tft.setTextSize(2);
+    tft.setTextColor(WHITE);
+    tft.print(var.username);
+    Serial.print(var.username);
+  }
+
+  if (EEPROM.read(1) == 0)
+  {
+    tft.setCursor(60, 160);
+    tft.print("(slot gol)");
+  }
+  else
+  {
+
+    profil var;
+    int location = 4;
+    location += sizeof(var);
+    EEPROM.get(location, var);
+    tft.setCursor(60, 160);
+    tft.setTextSize(2);
+    tft.setTextColor(WHITE);
+    tft.print(var.username);
+  }
+
+  if (EEPROM.read(2) == 0)
+  {
+    tft.setCursor(60, 250);
+    tft.print("(slot gol)");
+  }
+  else
+  {
+
+    profil var;
+    int location = 4;
+    location += 2 * sizeof(var);
+    EEPROM.get(location, var);
+    tft.setCursor(60, 250);
+    tft.setTextSize(2);
+    tft.setTextColor(WHITE);
+    tft.print(var.username);
+  }
+  GetTasteMeniuDelete();
+}
+
+
+void getTastePlay()
+{
+  while (1)
   {
     TSPoint p = ts.getPoint();
-    if(p.z > ts.pressureThreshhold)
+    if (p.z > ts.pressureThreshhold)
     {
       Serial.print(p.x);
       Serial.print(' ');
       Serial.print(p.y);
       Serial.print('\n');
-      if(p.x >= 160 && p.x <= 325)
+      if (p.x >= 145 && p.x <= 330 && p.y >= 150 && p.y <= 250)
       {
-        if(p.y >= 260 && p.y <= 390)
-          Serial.print("add\n");
-        else if(p.y >= 445 && p.y <= 575)
-          Serial.print("load\n");
-        else if(p.y >= 630 && p.y <= 760)
-          Serial.print("delete\n");
+        //MainMenu();
+        break;
+      }
+      else if (p.x >= 160 && p.x <= 325)
+      {
+        if (p.y >= 260 && p.y <= 390)
+        {
+          MeniuAdaugaProfil();
+          break;
+        }
+        else if (p.y >= 445 && p.y <= 575)
+        {
+          MeniuIncarcaProfil();
+          break;
+        }
+        else if (p.y >= 630 && p.y <= 760)
+        {
+          MeniuStergeProfil();
+          break;
+        }
       }
     }
     delay(300);
   }
+
+
+}
+
+void chenar(bool isPassword)
+{
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+  if (!isPassword)
+  {
+    tft.fillRect(0, 25, 100, 25, BLACK);
+    tft.setCursor(0, 30);
+    tft.setTextColor(WHITE);
+    tft.print("Username");
+  }
+  else
+  {
+    tft.fillRect(0, 110, 100, 25, BLACK);
+    tft.setCursor(0, 115);
+    tft.setTextColor(WHITE);
+    tft.print("Parola");
+    tft.fillRect(0, 25, 100, 25, BLUE);
+    tft.setCursor(0, 30);
+    tft.setTextColor(WHITE);
+    tft.print("Username");
+  }
+}
+
+void GetTasteMeniuAdd()
+{
+
+  while (1)
+  {
+    TSPoint p = ts.getPoint();
+    if (p.z > ts.pressureThreshhold)
+    {
+      Serial.print(p.x);
+      Serial.print(' ');
+      Serial.print(p.y);
+      Serial.print('\n');
+      if (p.x >= 145 && p.x <= 330 && p.y >= 150 && p.y <= 250)
+      {
+        ProfileMenu();
+        break;
+      }
+      else if (p.x >= 160 && p.x <= 925)
+      {
+        if (p.y >= 250 && p.y <= 440)
+        {
+          if (EEPROM.read(0) == 1)
+          {
+            pinMode(A1, OUTPUT);
+            pinMode(A2, OUTPUT);
+
+            tft.fillRect(0, 100, 239, 100, YELLOW);
+            tft.setTextSize(2);
+            tft.setTextColor(BLACK);
+            tft.setCursor(5, 110);
+            tft.print("Profilul aflat pe  slot va fi sters.  Continuati?");
+            tft.fillRect(20, 165, 60, 30, BLACK);
+            tft.fillRect(160, 165, 60, 30, BLACK);
+            tft.setCursor(35, 173);
+            tft.setTextColor(WHITE);
+            tft.print("DA");
+            tft.setCursor(175, 173);
+            tft.print("NU");
+            while (1)
+            {
+              TSPoint p = ts.getPoint();
+              if (p.z > ts.pressureThreshhold)
+              {
+                Serial.print(p.x);
+                Serial.print(' ');
+                Serial.print(p.y);
+                Serial.print('\n');
+                if (p.y >= 555 && p.y <= 630)
+                {
+                  if (p.x >= 215 && p.x <= 390)
+                  {
+                    for(int i = 0; i < user[0].username_len; i++)
+                      user[0].username[i] = 0;
+                    for(int i = 0; i < user[0].password_len; i++)
+                      user[0].parola[i] = 0;
+                    user[0].username_len = 0;
+                    user[0].password_len = 0;
+                    CreateProfile(1);
+                    break;
+                  }
+                  else if (p.x >= 660 && p.x <= 845)
+                  {
+                    MeniuAdaugaProfil();
+                    break;
+                  }
+                }
+
+              }
+            }
+          }
+          else
+          {
+            CreateProfile(1);
+            break;
+          }
+        }
+        else if (p.y >= 470 && p.y <= 660)
+        {
+          if (EEPROM.read(1) == 1)
+          {
+            pinMode(A1, OUTPUT);
+            pinMode(A2, OUTPUT);
+
+            tft.fillRect(0, 100, 239, 100, YELLOW);
+            tft.setTextSize(2);
+            tft.setTextColor(BLACK);
+            tft.setCursor(5, 110);
+            tft.print("Slot-ul nu este gol, iar profilul aflat pe slot va fi sters. Continuati?");
+            tft.fillRect(20, 165, 60, 30, BLACK);
+            tft.fillRect(160, 165, 60, 30, BLACK);
+            tft.setCursor(35, 173);
+            tft.setTextColor(WHITE);
+            tft.print("DA");
+            tft.setCursor(175, 173);
+            tft.print("NU");
+            while (1)
+            {
+              TSPoint p = ts.getPoint();
+              if (p.z > ts.pressureThreshhold)
+              {
+                Serial.print(p.x);
+                Serial.print(' ');
+                Serial.print(p.y);
+                Serial.print('\n');
+                if (p.y >= 555 && p.y <= 630)
+                {
+                  if (p.x >= 215 && p.x <= 390)
+                  {
+                    CreateProfile(2);
+                    break;
+                  }
+                  else if (p.x >= 660 && p.x <= 845)
+                  {
+                    MeniuAdaugaProfil();
+                    break;
+                  }
+                }
+
+              }
+            }
+          }
+          else
+          {
+            CreateProfile(2);
+            break;
+          }
+        }
+        else if (p.y >= 690 && p.y <= 880)
+        {
+          if (EEPROM.read(2) == 1)
+          {
+            pinMode(A1, OUTPUT);
+            pinMode(A2, OUTPUT);
+
+            tft.fillRect(0, 100, 239, 100, YELLOW);
+            tft.setTextSize(2);
+            tft.setTextColor(BLACK);
+            tft.setCursor(5, 110);
+            tft.print("Slot-ul nu este gol, iar profilul aflat pe slot va fi sters. Continuati?");
+            tft.fillRect(20, 165, 60, 30, BLACK);
+            tft.fillRect(160, 165, 60, 30, BLACK);
+            tft.setCursor(35, 173);
+            tft.setTextColor(WHITE);
+            tft.print("DA");
+            tft.setCursor(175, 173);
+            tft.print("NU");
+            while (1)
+            {
+              TSPoint p = ts.getPoint();
+              if (p.z > ts.pressureThreshhold)
+              {
+                Serial.print(p.x);
+                Serial.print(' ');
+                Serial.print(p.y);
+                Serial.print('\n');
+                if (p.y >= 555 && p.y <= 630)
+                {
+                  if (p.x >= 215 && p.x <= 390)
+                  {
+                    CreateProfile(3);
+                    break;
+                  }
+                  else if (p.x >= 660 && p.x <= 845)
+                  {
+                    MeniuAdaugaProfil();
+                    break;
+                  }
+                }
+
+              }
+            }
+          }
+          else
+          {
+            CreateProfile(3);
+            break;
+          }
+        }
+      }
+    }
+    delay(300);
+  }
+}
+
+void getPassword(int slot)
+{
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+
+  tft.fillScreen(BLUE);
+  tft.fillRect(0, 0, 60, 20, RED);
+  tft.setTextColor(WHITE);
+  tft.setTextSize(2);
+  tft.setCursor(5, 5);
+  tft.print("BACK");
+  tft.setCursor(0, 30);
+  tft.setTextSize(2);
+  tft.print("Username");
+  tft.fillRect(0, 50, 240, 30, WHITE);
+  tft.setCursor(0, 115);
+  tft.print("Parola");
+  tft.fillRect(0, 135, 240, 30, WHITE);
+
+  tft.setCursor(5, 57);
+  tft.setTextSize(2);
+  tft.setTextColor(BLACK);
+  profil var;
+  int loc = 4;
+  if(slot == 2)
+    loc += sizeof(var);
+  else if(slot == 3)
+    loc += 2 * sizeof(var);
   
+  tft.print(EEPROM.get(loc, var.username));
+
+  TastLitereProfil();
+  GetTasteIntroducereParola(slot);
   
+}
+
+void EcranProfil(int slot)
+{
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+
+  tft.fillScreen(YELLOW);
+  tft.fillRect(0, 0, 60, 20, RED);
+  tft.setTextColor(WHITE);
+  tft.setTextSize(2);
+  tft.setCursor(5, 5);
+  tft.print("BACK");
+
+  profil var;
+  int loc = 4;
+  if(slot == 2)
+    loc += sizeof(var);
+  else if(slot == 3)
+    loc += 2 * sizeof(var);
+  EEPROM.get(loc, var);
+
+  tft.fillRect(0, 35, 239, 60, BLUE);
+  tft.fillRect(50, 130, 130, 60, RED);
+  tft.fillRect(50, 220, 130, 60, RED);
+
+  tft.setCursor(0, 40);
+  tft.setTextColor(RED);
+  tft.print("Profil: ");
+  tft.print(var.username);
+  tft.print("\nLevel: ");
+  tft.print(var.Level);
+  tft.print("\nXP:");
+  tft.print(var.XPLevel);
+  tft.print('/');
+  tft.print(50 + (var.Level - 1) * 5);
+
+  tft.setCursor(76, 148);
+  tft.setTextColor(BLUE);
+  tft.setTextSize(3);
+  tft.print("PLAY");
+  tft.setCursor(68, 238);
+  tft.print("STATS");
+
+  while(1)
+  {
+    TSPoint p = ts.getPoint();
+    if (p.z > ts.pressureThreshhold)
+    {
+      Serial.print(p.x);
+      Serial.print(' ');
+      Serial.print(p.y);
+      Serial.print('\n');
+      if (p.x >= 145 && p.x <= 330 && p.y >= 150 && p.y <= 250)
+      {
+        ProfileMenu();
+        break;
+      }
+    }
+  }
+}
+
+void ParolaGresita(int slot)
+{
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+
+  tft.fillRect(0, 100, 239, 100, YELLOW);
+  tft.setTextSize(2);
+  tft.setTextColor(BLACK);
+  tft.setCursor(5, 110);
+  tft.print("Parola introdusa este gresita!");
+  tft.fillRect(85, 165, 60, 30, BLACK);
+    tft.setCursor(100, 173);
+    tft.setTextSize(2);
+    tft.setTextColor(WHITE);
+    tft.print("OK");
+
+    while (1)
+    {
+      TSPoint p = ts.getPoint();
+      if (p.z > ts.pressureThreshhold)
+      {
+        Serial.print(p.x);
+        Serial.print(' ');
+        Serial.print(p.y);
+        Serial.print('\n');
+        if (p.y >= 555 && p.y <= 630 && p.x >= 425 && p.y <= 610)
+        {
+          getPassword(slot);
+          break;
+        }
+      }
+    }
+}
+
+void GetTasteIntroducereParola(int slot)
+{
+  int mode = 1;
+  for(int i = 0; i < user[3].password_len; i++)
+    user[3].parola[i] = 0;
+  user[3].password_len = 0;
+  tft.setTextColor(BLACK);
+  tft.setTextSize(2);
+  bool isPassword = true;
+  chenar(isPassword);
+  while (1)
+  {
+
+    TSPoint p = ts.getPoint();
+
+    // we have some minimum pressure we consider 'valid'
+    // pressure of 0 means no pressing!
+    if (p.z > ts.pressureThreshhold) {
+      Serial.print("X = "); Serial.print(p.x);
+      Serial.print("\tY = "); Serial.print(p.y);
+      Serial.print("\tPressure = "); Serial.println(p.z);
+
+      if (mode == 1)
+      {
+        if (p.x >= 750 && p.x <= 885 && p.y >= 650 && p.y <= 720)
+        {
+            textboxPass();
+            user[3].password_len--;
+            user[3].parola[user[3].password_len] = 0;
+            afisareSirProfil(4, isPassword);
+        }
+        else if (p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
+        {
+          profil var;
+          int loc = 4;
+          if(slot == 2)
+            loc += sizeof(var);
+          else if(slot == 3)
+            loc += 2 * sizeof(var);
+          EEPROM.get(loc, var);
+          
+          if(strcmp(user[3].parola, var.parola) == 0)
+          {
+            EcranProfil(slot);
+            break;
+          }
+          else
+          {
+            ParolaGresita(slot);
+            break;
+          }
+        }
+
+        else if (p.x >= 770 && p.x <= 895 && p.y >= 745 && p.y <= 805)
+        {
+          mode = 2;
+
+          TastCifProfil();
+
+        }
+        else if (p.x >= 280 && p.x <= 595 && p.y >= 830 && p.y <= 895)
+          displayUserAndPass(4, ' ', isPassword);
+        else if (p.y >= 600 && p.y <= 660)
+        {
+          if (p.x >= 190 && p.x <= 240)
+            displayUserAndPass(4, 'Q', isPassword);
+          else if (p.x >= 245 && p.x <= 295)
+            displayUserAndPass(4, 'W', isPassword);
+          else if (p.x >= 300 && p.x <= 350)
+            displayUserAndPass(4, 'E', isPassword);
+          else if (p.x >= 355 && p.x <= 405)
+            displayUserAndPass(4, 'R', isPassword);
+          else if (p.x >= 410 && p.x <= 460)
+            displayUserAndPass(4, 'T', isPassword);
+          else if (p.x >= 465 && p.x <= 515)
+            displayUserAndPass(4, 'Y', isPassword);
+          else if (p.x >= 520 && p.x <= 570)
+            displayUserAndPass(4, 'U', isPassword);
+          else if (p.x >= 575 && p.x <= 625)
+            displayUserAndPass(4, 'I', isPassword);
+          else if (p.x >= 630 && p.x <= 680)
+            displayUserAndPass(4, 'O', isPassword);
+          else if (p.x >= 685 && p.x <= 735)
+            displayUserAndPass(4, 'P', isPassword);
+
+        }
+        else if (p.y >= 670 && p.y <= 730)
+        {
+          if (p.x >= 220 && p.x <= 270)
+            displayUserAndPass(4, 'A', isPassword);
+          else if (p.x >= 275 && p.x <= 325)
+            displayUserAndPass(4, 'S', isPassword);
+          else if (p.x >= 330 && p.x <= 380)
+            displayUserAndPass(4, 'D', isPassword);
+          else if (p.x >= 385 && p.x <= 435)
+            displayUserAndPass(4, 'F', isPassword);
+          else if (p.x >= 440 && p.x <= 490)
+            displayUserAndPass(4, 'G', isPassword);
+          else if (p.x >= 495 && p.x <= 545)
+            displayUserAndPass(4, 'H', isPassword);
+          else if (p.x >= 550 && p.x <= 600)
+            displayUserAndPass(4, 'J', isPassword);
+          else if (p.x >= 605 && p.x <= 655)
+            displayUserAndPass(4, 'K', isPassword);
+          else if (p.x >= 660 && p.x <= 710)
+            displayUserAndPass(4, 'L', isPassword);
+        }
+        else if (p.y >= 740 && p.y <= 800)
+        {
+          if (p.x >= 250 && p.x <= 300)
+            displayUserAndPass(4, 'Z', isPassword);
+          else if (p.x >= 305 && p.x <= 355)
+            displayUserAndPass(4, 'X', isPassword);
+          else if (p.x >= 360 && p.x <= 410)
+            displayUserAndPass(4, 'C', isPassword);
+          else if (p.x >= 415 && p.x <= 465)
+            displayUserAndPass(4, 'V', isPassword);
+          else if (p.x >= 470 && p.x <= 520)
+            displayUserAndPass(4, 'B', isPassword);
+          else if (p.x >= 525 && p.x <= 575)
+            displayUserAndPass(4, 'N', isPassword);
+          else if (p.x >= 580 && p.x <= 630)
+            displayUserAndPass(4, 'M', isPassword);
+        }
+
+      }
+      else
+      {
+        if (p.x >= 750 && p.x <= 885 && p.y >= 650 && p.y <= 720)
+        {
+            textboxPass();
+            user[3].password_len--;
+            user[3].parola[user[3].password_len] = 0;
+            afisareSirProfil(4, isPassword);
+        }
+        else if (p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
+        {
+          profil var;
+          int loc = 4;
+          if(slot == 2)
+            loc += sizeof(var);
+          else if(slot == 3)
+            loc += 2 * sizeof(var);
+          EEPROM.get(loc, var);
+          if(strcmp(user[3].parola, user[slot - 1].parola) == 0)
+          {
+            EcranProfil(slot);
+            break;
+          }
+          else
+          {
+            ParolaGresita(slot);
+            break;
+          }
+        }
+        else if (p.x >= 770 && p.x <= 895 && p.y >= 745 && p.y <= 805)
+        {
+          mode = 1;
+          TastLitereProfil();
+        }
+        else if (p.x >= 280 && p.x <= 595 && p.y >= 830 && p.y <= 895)
+          displayUserAndPass(4, ' ', isPassword);
+        else if (p.y >= 600 && p.y <= 660)
+        {
+          if (p.x >= 190 && p.x <= 240)
+            displayUserAndPass(4, '1', isPassword);
+          else if (p.x >= 245 && p.x <= 295)
+            displayUserAndPass(4, '2', isPassword);
+          else if (p.x >= 300 && p.x <= 350)
+            displayUserAndPass(4, '3', isPassword);
+          else if (p.x >= 355 && p.x <= 405)
+            displayUserAndPass(4, '4', isPassword);
+          else if (p.x >= 410 && p.x <= 460)
+            displayUserAndPass(4, '5', isPassword);
+          else if (p.x >= 465 && p.x <= 515)
+            displayUserAndPass(4, '6', isPassword);
+          else if (p.x >= 520 && p.x <= 570)
+            displayUserAndPass(4, '7', isPassword);
+          else if (p.x >= 575 && p.x <= 625)
+            displayUserAndPass(4, '8', isPassword);
+          else if (p.x >= 630 && p.x <= 680)
+            displayUserAndPass(4, '9', isPassword);
+          else if (p.x >= 685 && p.x <= 735)
+            displayUserAndPass(4, '0', isPassword);
+
+        }
+        else if (p.y >= 670 && p.y <= 730)
+        {
+          if (p.x >= 190 && p.x <= 240)
+            displayUserAndPass(4, '@', isPassword);
+          else if (p.x >= 245 && p.x <= 295)
+            displayUserAndPass(4, '.', isPassword);
+          else if (p.x >= 300 && p.x <= 350)
+            displayUserAndPass(4, '$', isPassword);
+          else if (p.x >= 355 && p.x <= 405)
+            displayUserAndPass(4, '_', isPassword);
+          else if (p.x >= 410 && p.x <= 460)
+            displayUserAndPass(4, '&', isPassword);
+          else if (p.x >= 465 && p.x <= 515)
+            displayUserAndPass(4, '-', isPassword);
+          else if (p.x >= 520 && p.x <= 570)
+            displayUserAndPass(4, '+', isPassword);
+          else if (p.x >= 575 && p.x <= 625)
+            displayUserAndPass(4, '(', isPassword);
+          else if (p.x >= 630 && p.x <= 680)
+            displayUserAndPass(4, ')', isPassword);
+          else if (p.x >= 685 && p.x <= 735)
+            displayUserAndPass(4, '/', isPassword);
+
+        }
+        else if (p.y >= 740 && p.y <= 800)
+        {
+          if (p.x >= 190 && p.x <= 240)
+            displayUserAndPass(4, '<', isPassword);
+          else if (p.x >= 245 && p.x <= 295)
+            displayUserAndPass(4, '*', isPassword);
+          else if (p.x >= 300 && p.x <= 350)
+            displayUserAndPass(4, '\'', isPassword);
+          else if (p.x >= 355 && p.x <= 405)
+            displayUserAndPass(4, ':', isPassword);
+          else if (p.x >= 410 && p.x <= 460)
+            displayUserAndPass(4, ';', isPassword);
+          else if (p.x >= 465 && p.x <= 515)
+            displayUserAndPass(4, '!', isPassword);
+          else if (p.x >= 520 && p.x <= 570)
+            displayUserAndPass(4, '?', isPassword);
+          else if (p.x >= 575 && p.x <= 625)
+            displayUserAndPass(4, '=', isPassword);
+          else if (p.x >= 630 && p.x <= 680)
+            displayUserAndPass(4, '%', isPassword);
+          else if (p.x >= 685 && p.x <= 735)
+            displayUserAndPass(4, '>', isPassword);
+        }
+        else if (p.y >= 810 && p.y <= 870)
+        {
+          if (p.x >= 190 && p.x <= 240)
+            displayUserAndPass(4, ',', isPassword);
+          else if (p.x >= 630 && p.x <= 680)
+          {
+            displayUserAndPass(4, '\"', isPassword);
+          }
+        }
+
+      }
+      if (p.x >= 145 && p.x <= 330 && p.y >= 150 && p.y <= 250)
+      {
+        MeniuAdaugaProfil();
+        break;
+      }
+    }
+    delay(200);
+  }
+}
+
+void GetTasteMeniuLoad()
+{
+  while (1)
+  {
+    TSPoint p = ts.getPoint();
+    if (p.z > ts.pressureThreshhold)
+    {
+      Serial.print(p.x);
+      Serial.print(' ');
+      Serial.print(p.y);
+      Serial.print('\n');
+      if (p.x >= 145 && p.x <= 330 && p.y >= 150 && p.y <= 250)
+      {
+        ProfileMenu();
+        break;
+      }
+      else if (p.x >= 160 && p.x <= 925)
+      {
+        if (p.y >= 250 && p.y <= 440)
+        {
+          getPassword(1);
+          break;
+        }
+        else if (p.y >= 470 && p.y <= 660)
+        {
+          getPassword(2);
+          break;
+        }
+        else if (p.y >= 690 && p.y <= 880)
+        {
+          getPassword(3);
+          break;
+        }
+      }
+    }
+    delay(300);
+  }
+}
+
+void mesaj_stergere(int slot)
+{
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+
+  tft.fillRect(0, 100, 239, 100, YELLOW);
+  tft.setTextSize(2);
+  tft.setTextColor(BLACK);
+  tft.setCursor(5, 110);
+  if (EEPROM.read(slot - 1) == 0)
+  {
+    tft.print("Slot-ul selectat   este gol!");
+    tft.fillRect(85, 165, 60, 30, BLACK);
+    tft.setCursor(100, 173);
+    tft.setTextSize(2);
+    tft.setTextColor(WHITE);
+    tft.print("OK");
+
+    while (1)
+    {
+      TSPoint p = ts.getPoint();
+      if (p.z > ts.pressureThreshhold)
+      {
+        Serial.print(p.x);
+        Serial.print(' ');
+        Serial.print(p.y);
+        Serial.print('\n');
+        if (p.y >= 555 && p.y <= 630 && p.x >= 425 && p.y <= 610)
+        {
+          MeniuStergeProfil();
+          break;
+        }
+      }
+    }
+  }
+  else
+  {
+    tft.print("Doriti sa stergeti profilul");
+    profil var;
+    if (slot == 1)
+    {
+      EEPROM.get(4, var);
+      tft.print('\n');
+      tft.setTextColor(RED);
+      tft.print("      ");
+      tft.print(var.username);
+      tft.setTextColor(BLACK);
+      tft.print("?");
+    }
+    else if (slot == 2)
+    {
+      int loc = 4;
+      loc += sizeof(var);
+      EEPROM.get(loc, var);
+      tft.print('\n');
+      tft.setTextColor(RED);
+      tft.print("      ");
+      tft.print(var.username);
+      tft.setTextColor(BLACK);
+      tft.print("?");
+    }
+    else if (slot == 3)
+    {
+      int loc = 4;
+      loc += 2 * sizeof(var);
+      EEPROM.get(loc, var);
+      tft.print('\n');
+      tft.setTextColor(RED);
+      tft.print("      ");
+      tft.print(var.username);
+      tft.setTextColor(BLACK);
+      tft.print("?");
+    }
+    tft.fillRect(20, 165, 60, 30, BLACK);
+    tft.fillRect(160, 165, 60, 30, BLACK);
+    tft.setCursor(35, 173);
+    tft.setTextColor(WHITE);
+    tft.print("DA");
+    tft.setCursor(175, 173);
+    tft.print("NU");
+    while (1)
+    {
+      TSPoint p = ts.getPoint();
+      if (p.z > ts.pressureThreshhold)
+      {
+        Serial.print(p.x);
+        Serial.print(' ');
+        Serial.print(p.y);
+        Serial.print('\n');
+        if (p.y >= 555 && p.y <= 630)
+        {
+          if (p.x >= 215 && p.x <= 390)
+          {
+            DeleteProfile(slot);
+            break;
+          }
+          else if (p.x >= 660 && p.x <= 845)
+          {
+            MeniuStergeProfil();
+            break;
+          }
+        }
+
+      }
+    }
+  }
+}
+
+void DeleteProfile(int slot)
+{
+  int marime = sizeof(user[0]), loc = 4;
+  if (slot == 1)
+  {
+    EEPROM.update(0, 0);
+  }
+  else if (slot == 2)
+  {
+    EEPROM.update(1, 0);
+    loc += marime;
+  }
+  else if (slot == 3)
+  {
+    EEPROM.update(2, 0);
+    loc += 2 * marime;
+  }
+  for (int i = loc; i < EEPROM.length() && marime; i++, marime--)
+    EEPROM.update(i, 0);
+  MeniuStergeProfil();
+}
+
+
+void GetTasteMeniuDelete()
+{
+  while (1)
+  {
+    TSPoint p = ts.getPoint();
+    if (p.z > ts.pressureThreshhold)
+    {
+      Serial.print(p.x);
+      Serial.print(' ');
+      Serial.print(p.y);
+      Serial.print('\n');
+      if (p.x >= 145 && p.x <= 330 && p.y >= 150 && p.y <= 250)
+      {
+        ProfileMenu();
+        break;
+      }
+      else if (p.x >= 160 && p.x <= 925)
+      {
+        if (p.y >= 250 && p.y <= 440)
+        {
+          mesaj_stergere(1);
+          break;
+        }
+        else if (p.y >= 470 && p.y <= 660)
+        {
+          mesaj_stergere(2);
+          break;
+        }
+        else if (p.y >= 690 && p.y <= 880)
+        {
+          mesaj_stergere(3);
+          break;
+        }
+      }
+    }
+    delay(300);
+  }
+}
+
+void GetTasteNewProfile(int slot)
+{
+  int mode = 1;
+  tft.setTextColor(BLACK);
+  tft.setTextSize(2);
+  bool isPassword = false;
+  chenar(isPassword);
+  while (1)
+  {
+
+    TSPoint p = ts.getPoint();
+
+    // we have some minimum pressure we consider 'valid'
+    // pressure of 0 means no pressing!
+    if (p.z > ts.pressureThreshhold) {
+      Serial.print("X = "); Serial.print(p.x);
+      Serial.print("\tY = "); Serial.print(p.y);
+      Serial.print("\tPressure = "); Serial.println(p.z);
+
+      if (mode == 1)
+      {
+        if (p.x >= 750 && p.x <= 885 && p.y >= 650 && p.y <= 720)
+        {
+
+          if (isPassword)
+          {
+            textboxPass();
+            user[slot - 1].password_len--;
+            user[slot - 1].parola[user[slot - 1].password_len] = 0;
+            afisareSirProfil(slot, isPassword);
+          }
+          else
+          {
+            textboxUser();
+            user[slot - 1].username_len--;
+            user[slot - 1].username[user[slot - 1].username_len] = 0;
+            afisareSirProfil(slot, isPassword);
+          }
+        }
+        else if (p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
+        {
+          if (!isPassword)
+          {
+            isPassword = true;
+            chenar(isPassword);
+
+          }
+          else
+          {
+            if (slot == 1)
+            {
+              EEPROM.put(4, user[0]);
+              EEPROM.update(0, 1);
+            }
+            else if (slot == 2)
+            {
+              int loc = 4;
+              loc += sizeof(user[0]);
+              EEPROM.put(loc, user[1]);
+              EEPROM.update(1, 1);
+            }
+            else if (slot == 3)
+            {
+              int loc = 4;
+              loc += sizeof(user[0]);
+              loc += sizeof(user[1]);
+              EEPROM.put(loc, user[2]);
+              EEPROM.update(2, 1);
+            }
+            ProfileMenu();
+            break;
+          }
+        }
+
+        else if (p.x >= 770 && p.x <= 895 && p.y >= 745 && p.y <= 805)
+        {
+          mode = 2;
+
+          TastCifProfil();
+
+        }
+        else if (p.x >= 280 && p.x <= 595 && p.y >= 830 && p.y <= 895)
+          displayUserAndPass(slot, ' ', isPassword);
+        else if (p.y >= 600 && p.y <= 660)
+        {
+          if (p.x >= 190 && p.x <= 240)
+            displayUserAndPass(slot, 'Q', isPassword);
+          else if (p.x >= 245 && p.x <= 295)
+            displayUserAndPass(slot, 'W', isPassword);
+          else if (p.x >= 300 && p.x <= 350)
+            displayUserAndPass(slot, 'E', isPassword);
+          else if (p.x >= 355 && p.x <= 405)
+            displayUserAndPass(slot, 'R', isPassword);
+          else if (p.x >= 410 && p.x <= 460)
+            displayUserAndPass(slot, 'T', isPassword);
+          else if (p.x >= 465 && p.x <= 515)
+            displayUserAndPass(slot, 'Y', isPassword);
+          else if (p.x >= 520 && p.x <= 570)
+            displayUserAndPass(slot, 'U', isPassword);
+          else if (p.x >= 575 && p.x <= 625)
+            displayUserAndPass(slot, 'I', isPassword);
+          else if (p.x >= 630 && p.x <= 680)
+            displayUserAndPass(slot, 'O', isPassword);
+          else if (p.x >= 685 && p.x <= 735)
+            displayUserAndPass(slot, 'P', isPassword);
+
+        }
+        else if (p.y >= 670 && p.y <= 730)
+        {
+          if (p.x >= 220 && p.x <= 270)
+            displayUserAndPass(slot, 'A', isPassword);
+          else if (p.x >= 275 && p.x <= 325)
+            displayUserAndPass(slot, 'S', isPassword);
+          else if (p.x >= 330 && p.x <= 380)
+            displayUserAndPass(slot, 'D', isPassword);
+          else if (p.x >= 385 && p.x <= 435)
+            displayUserAndPass(slot, 'F', isPassword);
+          else if (p.x >= 440 && p.x <= 490)
+            displayUserAndPass(slot, 'G', isPassword);
+          else if (p.x >= 495 && p.x <= 545)
+            displayUserAndPass(slot, 'H', isPassword);
+          else if (p.x >= 550 && p.x <= 600)
+            displayUserAndPass(slot, 'J', isPassword);
+          else if (p.x >= 605 && p.x <= 655)
+            displayUserAndPass(slot, 'K', isPassword);
+          else if (p.x >= 660 && p.x <= 710)
+            displayUserAndPass(slot, 'L', isPassword);
+        }
+        else if (p.y >= 740 && p.y <= 800)
+        {
+          if (p.x >= 250 && p.x <= 300)
+            displayUserAndPass(slot, 'Z', isPassword);
+          else if (p.x >= 305 && p.x <= 355)
+            displayUserAndPass(slot, 'X', isPassword);
+          else if (p.x >= 360 && p.x <= 410)
+            displayUserAndPass(slot, 'C', isPassword);
+          else if (p.x >= 415 && p.x <= 465)
+            displayUserAndPass(slot, 'V', isPassword);
+          else if (p.x >= 470 && p.x <= 520)
+            displayUserAndPass(slot, 'B', isPassword);
+          else if (p.x >= 525 && p.x <= 575)
+            displayUserAndPass(slot, 'N', isPassword);
+          else if (p.x >= 580 && p.x <= 630)
+            displayUserAndPass(slot, 'M', isPassword);
+        }
+
+      }
+      else
+      {
+        if (p.x >= 750 && p.x <= 885 && p.y >= 650 && p.y <= 720)
+        {
+          if (isPassword)
+          {
+            textboxPass();
+            user[slot - 1].password_len--;
+            user[slot - 1].parola[user[slot - 1].password_len] = 0;
+            afisareSirProfil(slot, isPassword);
+          }
+          else
+          {
+            textboxUser();
+            user[slot - 1].username_len--;
+            user[slot - 1].username[user[slot - 1].username_len] = 0;
+            afisareSirProfil(slot, isPassword);
+          }
+        }
+        else if (p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
+        {
+          if (!isPassword)
+          {
+            isPassword = true;
+          }
+          else
+          {
+            if (slot == 1)
+            {
+              EEPROM.put(4, user[0]);
+              EEPROM.update(0, 1);
+            }
+            else if (slot == 2)
+            {
+              int loc = 4;
+              loc += sizeof(user[0]);
+              EEPROM.put(loc, user[1]);
+              EEPROM.update(1, 1);
+            }
+            else if (slot == 3)
+            {
+              int loc = 4;
+              loc += sizeof(user[0]);
+              loc += sizeof(user[1]);
+              EEPROM.put(loc, user[2]);
+              EEPROM.update(2, 1);
+            }
+            ProfileMenu();
+            break;
+          }
+        }
+        else if (p.x >= 770 && p.x <= 895 && p.y >= 745 && p.y <= 805)
+        {
+          mode = 1;
+          TastLitereProfil();
+        }
+        else if (p.x >= 280 && p.x <= 595 && p.y >= 830 && p.y <= 895)
+          displayUserAndPass(slot, ' ', isPassword);
+        else if (p.y >= 600 && p.y <= 660)
+        {
+          if (p.x >= 190 && p.x <= 240)
+            displayUserAndPass(slot, '1', isPassword);
+          else if (p.x >= 245 && p.x <= 295)
+            displayUserAndPass(slot, '2', isPassword);
+          else if (p.x >= 300 && p.x <= 350)
+            displayUserAndPass(slot, '3', isPassword);
+          else if (p.x >= 355 && p.x <= 405)
+            displayUserAndPass(slot, '4', isPassword);
+          else if (p.x >= 410 && p.x <= 460)
+            displayUserAndPass(slot, '5', isPassword);
+          else if (p.x >= 465 && p.x <= 515)
+            displayUserAndPass(slot, '6', isPassword);
+          else if (p.x >= 520 && p.x <= 570)
+            displayUserAndPass(slot, '7', isPassword);
+          else if (p.x >= 575 && p.x <= 625)
+            displayUserAndPass(slot, '8', isPassword);
+          else if (p.x >= 630 && p.x <= 680)
+            displayUserAndPass(slot, '9', isPassword);
+          else if (p.x >= 685 && p.x <= 735)
+            displayUserAndPass(slot, '0', isPassword);
+
+        }
+        else if (p.y >= 670 && p.y <= 730)
+        {
+          if (p.x >= 190 && p.x <= 240)
+            displayUserAndPass(slot, '@', isPassword);
+          else if (p.x >= 245 && p.x <= 295)
+            displayUserAndPass(slot, '.', isPassword);
+          else if (p.x >= 300 && p.x <= 350)
+            displayUserAndPass(slot, '$', isPassword);
+          else if (p.x >= 355 && p.x <= 405)
+            displayUserAndPass(slot, '_', isPassword);
+          else if (p.x >= 410 && p.x <= 460)
+            displayUserAndPass(slot, '&', isPassword);
+          else if (p.x >= 465 && p.x <= 515)
+            displayUserAndPass(slot, '-', isPassword);
+          else if (p.x >= 520 && p.x <= 570)
+            displayUserAndPass(slot, '+', isPassword);
+          else if (p.x >= 575 && p.x <= 625)
+            displayUserAndPass(slot, '(', isPassword);
+          else if (p.x >= 630 && p.x <= 680)
+            displayUserAndPass(slot, ')', isPassword);
+          else if (p.x >= 685 && p.x <= 735)
+            displayUserAndPass(slot, '/', isPassword);
+
+        }
+        else if (p.y >= 740 && p.y <= 800)
+        {
+          if (p.x >= 190 && p.x <= 240)
+            displayUserAndPass(slot, '<', isPassword);
+          else if (p.x >= 245 && p.x <= 295)
+            displayUserAndPass(slot, '*', isPassword);
+          else if (p.x >= 300 && p.x <= 350)
+            displayUserAndPass(slot, '\'', isPassword);
+          else if (p.x >= 355 && p.x <= 405)
+            displayUserAndPass(slot, ':', isPassword);
+          else if (p.x >= 410 && p.x <= 460)
+            displayUserAndPass(slot, ';', isPassword);
+          else if (p.x >= 465 && p.x <= 515)
+            displayUserAndPass(slot, '!', isPassword);
+          else if (p.x >= 520 && p.x <= 570)
+            displayUserAndPass(slot, '?', isPassword);
+          else if (p.x >= 575 && p.x <= 625)
+            displayUserAndPass(slot, '=', isPassword);
+          else if (p.x >= 630 && p.x <= 680)
+            displayUserAndPass(slot, '%', isPassword);
+          else if (p.x >= 685 && p.x <= 735)
+            displayUserAndPass(slot, '>', isPassword);
+        }
+        else if (p.y >= 810 && p.y <= 870)
+        {
+          if (p.x >= 190 && p.x <= 240)
+            displayUserAndPass(slot, ',', isPassword);
+          else if (p.x >= 630 && p.x <= 680)
+          {
+            displayUserAndPass(slot, '\"', isPassword);
+          }
+        }
+
+      }
+      if (p.x >= 145 && p.x <= 330 && p.y >= 150 && p.y <= 250)
+      {
+        MeniuAdaugaProfil();
+        break;
+      }
+    }
+    delay(200);
+  }
 }
 
 void Play()
 {
   ProfileMenu();
-  getTasteProfileMenu();
+  
 }
 
 String morse(char c)
