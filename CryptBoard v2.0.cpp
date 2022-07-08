@@ -1346,7 +1346,7 @@ void getTastePlay()
       Serial.print('\n');
       if (p.x >= 145 && p.x <= 330 && p.y >= 150 && p.y <= 250)
       {
-        //MainMenu();
+        MainMenu();
         break;
       }
       else if (p.x >= 160 && p.x <= 325)
