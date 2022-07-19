@@ -30,6 +30,22 @@ MCUFRIEND_kbv tft;
 TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);
 TSPoint p;
 
+String text;
+bool first = true;
+int score, XP_crnt, slot;
+char MorseChars[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,.?;:/-()_@!&=+$ ";
+char sir[300], cheie[300];
+int mode = 1, len, len_key;
+bool isKey = true, smaller = false, isVig = false;
+
+struct profil
+{
+  char username[10], parola[15];
+  int HighScoreMorse = 0, HighScoreCesar = 0, HighScoreHex = 0, HighScoreBinary = 0, HighScoreVigenere = 0, HighScoreAtbash = 0;
+  int Level = 1, XPLevel = 0;
+  int username_len = 0, password_len = 0;
+
+} user[4]; ///3 slot-uri + 1 profil pentru verificare parola
 
 void MorseTabelSimb()
 {
@@ -758,9 +774,6 @@ void CypherMenuWiki()
   }
 }
 
-char sir[300], cheie[300];
-int mode = 1, len, len_key;
-bool isKey = true, smaller = false, isVig = false;
 
 void CypherMenuWork()
 {
@@ -844,7 +857,7 @@ void CypherMenuWork()
   return;
 }
 
-void CypherMenuPlay()
+void CypherMenuPlay(int slot)
 {
 
   pinMode(A1, OUTPUT);
@@ -876,6 +889,1726 @@ void CypherMenuPlay()
   tft.setTextColor(BLACK);
   tft.setCursor(173, 296);
   tft.print("BACK");
+
+  first = true;
+  XP_crnt = 0;
+  score = 0;
+
+  while (1)
+  {
+
+    p = ts.getPoint();
+    if (p.z > ts.pressureThreshhold)
+    {
+
+      if (p.x >= 720 && p.x <= 895 && p.y >= 870 && p.y <= 915)
+      {
+        MainMenu();
+        break;
+      }
+      else if (p.x >= 230 && p.x <= 485 && p.y >= 175 && p.y <= 380)
+      {
+        CryptDecryptMenuMorsePlay(slot);
+        break;
+      }
+      else if (p.x >= 560 && p.x <= 835 && p.y >= 175 && p.y <= 380)
+      {
+        CryptDecryptMenuCesarPlay(slot);
+        break;
+      }
+      else if (p.x >= 230 && p.x <= 485 && p.y >= 420 && p.y <= 615)
+      {
+        CryptDecryptMenuHexPlay(slot);
+        break;
+      }
+      else if (p.x >= 560 && p.x <= 835 && p.y >= 420 && p.y <= 615)
+      {
+        CryptDecryptMenuBinaryPlay(slot);
+        break;
+      }
+      else if (p.x >= 230 && p.x <= 485 && p.y >= 670 && p.y <= 865)
+      {
+        CryptDecryptMenuVigenerePlay(slot);
+        break;
+      }
+      else if (p.x >= 560 && p.x <= 835 && p.y >= 670 && p.y <= 865)
+      {
+        //CaseAtbashPlay(slot);
+        break;
+      }
+
+
+    }
+  }
+}
+
+void CryptDecryptMenuMorsePlay(int slot)
+{
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+
+  tft.fillRect(0, 0, 239, 160, CYAN);
+  tft.fillRect(0, 160, 239, 160, MAGENTA);
+  tft.setCursor(60, 60);
+  tft.setTextSize(3);
+  tft.setTextColor(RED);
+  tft.print("Encrypt");
+  tft.setCursor(60, 220);
+  tft.print("Decrypt");
+
+  tft.fillRect(170, 295, 60, 20, GREEN);
+  tft.setTextColor(BLACK);
+  tft.setTextSize(2);
+  tft.setCursor(173, 296);
+  tft.print("BACK");
+
+  while (1)
+  {
+    p = ts.getPoint();
+    if (p.z > ts.pressureThreshhold)
+    {
+      Serial.print(p.x);
+      Serial.print(' ');
+      Serial.print(p.y);
+      Serial.print('\n');
+      if (p.x >= 720 && p.x <= 895 && p.y >= 870 && p.y <= 915)
+      {
+        CypherMenuPlay(slot);
+        break;
+      }
+      else if (p.x >= 200 && p.x <= 910 && p.y >= 200 && p.y <= 560)
+      {
+        PlayMorseEncrypt(slot);
+        break;
+      }
+      else if (p.x >= 200 && p.x <= 910 && p.y >= 565 && p.y <= 930)
+      {
+        PlayMorseDecrypt(slot);
+        break;
+      }
+    }
+  }
+}
+
+String morse_rep[60];
+
+void get_morse_rep()
+{
+  int l = strlen(MorseChars);
+  for (int i = 0; i < l; i++)
+    morse_rep[i] = morse(MorseChars[i]);
+}
+
+void generateEasyMorseDecrypt()
+{
+  randomSeed(analogRead(A7));
+  String s;
+  for (int i = 0; i < s.length(); i++)
+    s[i] = '\0';
+  for (int i = 0; i < 3; i++)
+  {
+    int poz = random(0, 26);
+    s.concat(morse_rep[poz]);
+    s.concat(" ");
+  }
+  text = s;
+}
+
+void generateMediumMorseDecrypt()
+{
+  randomSeed(analogRead(A7));
+  String s;
+  for (int i = 0; i < s.length(); i++)
+    s[i] = '\0';
+  for (int i = 0; i < 5; i++)
+  {
+    int poz = random(0, 36);
+    s.concat(morse_rep[poz]);
+    s.concat(" ");
+  }
+  text = s;
+}
+
+void generateHardMorseDecrypt()
+{
+  randomSeed(analogRead(A7));
+  String s;
+  for (int i = 0; i < s.length(); i++)
+    s[i] = '\0';
+  for (int i = 0; i < 10; i++)
+  {
+    int poz = random(0, 53);
+    s.concat(morse_rep[poz]);
+    s.concat(" ");
+  }
+  text = s;
+}
+
+void PlayMorseDecrypt(int slot)
+{
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+  get_morse_rep();
+  for (int i = 0; i < text.length(); i++)
+    text[i] = 0;
+  tft.fillScreen(BLACK);
+  resetString();
+  textboxPlay();
+  tast_litere();
+  int dif = generate_difficulty();
+  Serial.print(dif);
+  Serial.print('\n');
+  if (first == true)
+  {
+    first = false;
+    display_difficulty("EASY");
+    generateEasyMorseDecrypt();
+  }
+  else
+  {
+    if (dif == 1)
+    {
+      display_difficulty("EASY");
+      generateEasyMorseDecrypt();
+    }
+    else if (dif == 2)
+    {
+      display_difficulty("MEDIUM");
+      generateMediumMorseDecrypt();
+    }
+    else if (dif == 3)
+    {
+      display_difficulty("HARD");
+      generateHardMorseDecrypt();
+    }
+  }
+  for (int i = 0; i < text.length(); i++)
+  {
+    Serial.print(i);
+    Serial.print(' ');
+    Serial.print(text[i]);
+    Serial.print('\n');
+  }
+
+  displayScore(score);
+  enter_string();
+  GetTastePlayMorseDecrypt(slot);
+}
+
+void GetTastePlayMorseDecrypt(int slot)
+{
+  resetString();
+  String corect = MorseDecrypt(text);
+  while (1)
+  {
+
+    TSPoint p = ts.getPoint();
+
+    // we have some minimum pressure we consider 'valid'
+    // pressure of 0 means no pressing!
+    if (p.z > ts.pressureThreshhold) {
+      Serial.print("X = "); Serial.print(p.x);
+      Serial.print("\tY = "); Serial.print(p.y);
+      Serial.print("\tPressure = "); Serial.println(p.z);
+
+      if (mode == 1)
+      {
+        if (p.x >= 750 && p.x <= 885 && p.y >= 650 && p.y <= 720)
+        {
+          textboxPlay();
+          enter_string();
+          len--;
+          sir[len] = 0;
+          afisare_sir(2);
+        }
+        else if (p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
+        {
+          Serial.print("OK");
+          sir[len] = 0;
+          if (CheckMorseDecrypt() == corect.length())
+          {
+            TextVerificareMorseDecrypt(true, 0, slot);
+
+          }
+          else
+          {
+            TextVerificareMorseDecrypt(false, corect.length() - CheckMorseDecrypt(), slot);
+          }
+          break;
+        }
+
+        else if (p.x >= 770 && p.x <= 895 && p.y >= 745 && p.y <= 805)
+        {
+          mode = 2;
+
+          tast_cif_simb();
+
+        }
+        else if (p.x >= 280 && p.x <= 595 && p.y >= 830 && p.y <= 895)
+          displayCharPlay(' ');
+        else if (p.y >= 600 && p.y <= 660)
+        {
+          if (p.x >= 190 && p.x <= 240)
+            displayCharPlay('Q');
+          else if (p.x >= 245 && p.x <= 295)
+            displayCharPlay('W');
+          else if (p.x >= 300 && p.x <= 350)
+            displayCharPlay('E');
+          else if (p.x >= 355 && p.x <= 405)
+            displayCharPlay('R');
+          else if (p.x >= 410 && p.x <= 460)
+            displayCharPlay('T');
+          else if (p.x >= 465 && p.x <= 515)
+            displayCharPlay('Y');
+          else if (p.x >= 520 && p.x <= 570)
+            displayCharPlay('U');
+          else if (p.x >= 575 && p.x <= 625)
+            displayCharPlay('I');
+          else if (p.x >= 630 && p.x <= 680)
+            displayCharPlay('O');
+          else if (p.x >= 685 && p.x <= 735)
+            displayCharPlay('P');
+
+        }
+        else if (p.y >= 670 && p.y <= 730)
+        {
+          if (p.x >= 220 && p.x <= 270)
+            displayCharPlay('A');
+          else if (p.x >= 275 && p.x <= 325)
+            displayCharPlay('S');
+          else if (p.x >= 330 && p.x <= 380)
+            displayCharPlay('D');
+          else if (p.x >= 385 && p.x <= 435)
+            displayCharPlay('F');
+          else if (p.x >= 440 && p.x <= 490)
+            displayCharPlay('G');
+          else if (p.x >= 495 && p.x <= 545)
+            displayCharPlay('H');
+          else if (p.x >= 550 && p.x <= 600)
+            displayCharPlay('J');
+          else if (p.x >= 605 && p.x <= 655)
+            displayCharPlay('K');
+          else if (p.x >= 660 && p.x <= 710)
+            displayCharPlay('L');
+        }
+        else if (p.y >= 740 && p.y <= 800)
+        {
+          if (p.x >= 250 && p.x <= 300)
+            displayCharPlay('Z');
+          else if (p.x >= 305 && p.x <= 355)
+            displayCharPlay('X');
+          else if (p.x >= 360 && p.x <= 410)
+            displayCharPlay('C');
+          else if (p.x >= 415 && p.x <= 465)
+            displayCharPlay('V');
+          else if (p.x >= 470 && p.x <= 520)
+            displayCharPlay('B');
+          else if (p.x >= 525 && p.x <= 575)
+            displayCharPlay('N');
+          else if (p.x >= 580 && p.x <= 630)
+            displayCharPlay('M');
+        }
+
+      }
+      else
+      {
+        if (p.x >= 750 && p.x <= 885 && p.y >= 650 && p.y <= 720)
+        {
+          textboxPlay();
+          enter_string();
+          len--;
+          sir[len] = 0;
+          afisare_sir(2);
+        }
+        else if (p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
+        {
+          Serial.print("OK");
+          sir[len] = 0;
+          if (CheckMorseDecrypt() == corect.length())
+          {
+            TextVerificareMorseDecrypt(true, 0, slot);
+
+          }
+          else
+          {
+            TextVerificareMorseDecrypt(false, corect.length() - CheckMorseDecrypt(), slot);
+          }
+          break;
+        }
+        else if (p.x >= 770 && p.x <= 895 && p.y >= 745 && p.y <= 805)
+        {
+          mode = 1;
+          tast_litere();
+        }
+        else if (p.x >= 280 && p.x <= 595 && p.y >= 830 && p.y <= 895)
+          displayCharPlay(' ');
+        else if (p.y >= 600 && p.y <= 660)
+        {
+          if (p.x >= 190 && p.x <= 240)
+            displayCharPlay('1');
+          else if (p.x >= 245 && p.x <= 295)
+            displayCharPlay('2');
+          else if (p.x >= 300 && p.x <= 350)
+            displayCharPlay('3');
+          else if (p.x >= 355 && p.x <= 405)
+            displayCharPlay('4');
+          else if (p.x >= 410 && p.x <= 460)
+            displayCharPlay('5');
+          else if (p.x >= 465 && p.x <= 515)
+            displayCharPlay('6');
+          else if (p.x >= 520 && p.x <= 570)
+            displayCharPlay('7');
+          else if (p.x >= 575 && p.x <= 625)
+            displayCharPlay('8');
+          else if (p.x >= 630 && p.x <= 680)
+            displayCharPlay('9');
+          else if (p.x >= 685 && p.x <= 735)
+            displayCharPlay('0');
+
+        }
+        else if (p.y >= 670 && p.y <= 730)
+        {
+          if (p.x >= 190 && p.x <= 240)
+            displayCharPlay('@');
+          else if (p.x >= 245 && p.x <= 295)
+            displayCharPlay('.');
+          else if (p.x >= 300 && p.x <= 350)
+            displayCharPlay('$');
+          else if (p.x >= 355 && p.x <= 405)
+            displayCharPlay('_');
+          else if (p.x >= 410 && p.x <= 460)
+            displayCharPlay('&');
+          else if (p.x >= 465 && p.x <= 515)
+            displayCharPlay('-');
+          else if (p.x >= 520 && p.x <= 570)
+            displayCharPlay('+');
+          else if (p.x >= 575 && p.x <= 625)
+            displayCharPlay('(');
+          else if (p.x >= 630 && p.x <= 680)
+            displayCharPlay(')');
+          else if (p.x >= 685 && p.x <= 735)
+            displayCharPlay('/');
+
+        }
+        else if (p.y >= 740 && p.y <= 800)
+        {
+          if (p.x >= 190 && p.x <= 240)
+            displayCharPlay('<');
+          else if (p.x >= 245 && p.x <= 295)
+            displayCharPlay('*');
+          else if (p.x >= 300 && p.x <= 350)
+            displayCharPlay('\'');
+          else if (p.x >= 355 && p.x <= 405)
+            displayCharPlay(':');
+          else if (p.x >= 410 && p.x <= 460)
+            displayCharPlay(';');
+          else if (p.x >= 465 && p.x <= 515)
+            displayCharPlay('!');
+          else if (p.x >= 520 && p.x <= 570)
+            displayCharPlay('?');
+          else if (p.x >= 575 && p.x <= 625)
+            displayCharPlay('=');
+          else if (p.x >= 630 && p.x <= 680)
+            displayCharPlay('%');
+          else if (p.x >= 685 && p.x <= 735)
+            displayCharPlay('>');
+        }
+        else if (p.y >= 810 && p.y <= 870)
+        {
+          if (p.x >= 190 && p.x <= 240)
+            displayCharPlay(',');
+          else if (p.x >= 630 && p.x <= 680)
+          {
+            displayCharPlay('\"');
+          }
+        }
+
+      }
+      if (p.x >= 145 && p.x <= 330 && p.y >= 150 && p.y <= 250)
+      {
+        CypherMenuPlay(slot);
+        break;
+      }
+      else if (p.x >= 780 && p.x <= 915 && p.y >= 595 && p.y <= 645)
+      {
+        smaller = true;
+        if (mode == 1)
+          tast_litere();
+        else
+          tast_cif_simb();
+        textboxPlay();
+        enter_string();
+        afisare_sir(2);
+      }
+    }
+    delay(200);
+  }
+}
+
+void TextVerificareMorseDecrypt(bool corect, int gresite, int slot)
+{
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+
+  tft.fillRect(0, 40, 239, 130, CYAN);
+  tft.setCursor(5, 45);
+  tft.setTextSize(2);
+  tft.setTextColor(WHITE);
+  int dif = MorseDecrypt(text).length();
+  if (corect == 1)
+  {
+    tft.print("CORECT!");
+    tft.print('\n');
+    if (dif == 3)
+    {
+      tft.print("+5 XP\n");
+      XP_crnt += 5;
+    }
+    else if (dif == 5)
+    {
+      tft.print("+10 XP\n");
+      XP_crnt += 10;
+    }
+    else if (dif == 10)
+    {
+      tft.print("+20 XP\n");
+      XP_crnt += 20;
+    }
+    tft.print("Scor: +");
+    tft.print(dif * 10);
+    score += dif * 10;
+  }
+  else
+  {
+    tft.print("GRESIT!\n");
+    tft.print("Raspuns corect: ");
+    if (dif == 10)
+      tft.print('\n');
+    tft.print(MorseDecrypt(text));
+    tft.setTextSize(2);
+    tft.print("\nXP: +");
+    tft.print(dif - gresite);
+    XP_crnt += dif - gresite;
+    tft.print("\nScor: ");
+    int scor = 10 * (dif - gresite) - 5 * gresite;
+    if (scor > 0)
+      tft.print("+");
+    tft.print(scor);
+    score += scor;
+  }
+
+  tft.fillRect(85, 135, 70, 30, GRAY);
+  tft.setCursor(95, 143);
+  tft.setTextSize(2);
+  tft.setTextColor(BLUE);
+  tft.print("NEXT");
+
+  while (1)
+  {
+    TSPoint p = ts.getPoint();
+
+    // we have some minimum pressure we consider 'valid'
+    // pressure of 0 means no pressing!
+    if (p.z > ts.pressureThreshhold) {
+      Serial.print("X = "); Serial.print(p.x);
+      Serial.print("\tY = "); Serial.print(p.y);
+      Serial.print("\tPressure = "); Serial.println(p.z);
+      if (p.x >= 420 && p.x <= 650 && p.y >= 490 && p.y <= 555)
+      {
+        if (gresite > dif / 2)
+        {
+          GameOverMorse(slot);
+        }
+        else
+        {
+          PlayMorseDecrypt(slot);
+          break;
+        }
+      }
+    }
+
+  }
+
+}
+
+String MorseDecrypt(String s)
+{
+  char text_char[text.length() + 10];
+  text.toCharArray(text_char, text.length() + 10);
+  String answer;
+  for (int i = 0; i < answer.length(); i++)
+    answer[i] = '\0';
+  char *p = strtok(text_char, " ");
+  while (p)
+  {
+    String c = String(p);
+    answer.concat(Morse(c));
+    p = strtok(NULL, " ");
+  }
+  return answer;
+}
+
+int CheckMorseDecrypt()
+{
+  int nr = 0;
+  String correct_answer = MorseDecrypt(text);
+  int l = correct_answer.length();
+  for (int i = 0; i < l; i++)
+    if (correct_answer[i] == sir[i])
+      nr++;
+  return nr;
+}
+
+void CryptDecryptMenuCesarPlay(int slot)
+{
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+
+  tft.fillRect(0, 0, 239, 160, CYAN);
+  tft.fillRect(0, 160, 239, 160, MAGENTA);
+  tft.setCursor(60, 60);
+  tft.setTextSize(3);
+  tft.setTextColor(RED);
+  tft.print("Encrypt");
+  tft.setCursor(60, 220);
+  tft.print("Decrypt");
+
+  tft.fillRect(170, 295, 60, 20, GREEN);
+  tft.setTextColor(BLACK);
+  tft.setTextSize(2);
+  tft.setCursor(173, 296);
+  tft.print("BACK");
+
+  while (1)
+  {
+    p = ts.getPoint();
+    if (p.z > ts.pressureThreshhold)
+    {
+      Serial.print(p.x);
+      Serial.print(' ');
+      Serial.print(p.y);
+      Serial.print('\n');
+      if (p.x >= 720 && p.x <= 895 && p.y >= 870 && p.y <= 915)
+      {
+        CypherMenuPlay(slot);
+        break;
+      }
+      else if (p.x >= 200 && p.x <= 910 && p.y >= 200 && p.y <= 560)
+      {
+        PlayCesarEncrypt(slot);
+        break;
+      }
+      else if (p.x >= 200 && p.x <= 910 && p.y >= 565 && p.y <= 930)
+      {
+        PlayCesarDecrypt(slot);
+        break;
+      }
+    }
+  }
+}
+
+void generateEasyCesar()
+{
+  randomSeed(analogRead(A7));
+  String s;
+  for (int i = 0; i < s.length(); i++)
+    s[i] = '\0';
+  for (int i = 0; i < 3; i++)
+  {
+    int poz = random(0, 26);
+    s.concat((char)('A' + poz));
+  }
+  text = s;
+}
+
+void generateMediumCesar()
+{
+  randomSeed(analogRead(A7));
+  String s;
+  for (int i = 0; i < s.length(); i++)
+    s[i] = '\0';
+  for (int i = 0; i < 5; i++)
+  {
+    int poz = random(0, 26);
+    s.concat((char)('A' + poz));
+  }
+  text = s;
+}
+
+void generateHardCesar()
+{
+  randomSeed(analogRead(A7));
+  String s;
+  for (int i = 0; i < s.length(); i++)
+    s[i] = '\0';
+  for (int i = 0; i < 10; i++)
+  {
+    int poz = random(0, 26);
+    s.concat((char)('A' + poz));
+  }
+  text = s;
+}
+
+void PlayCesarEncrypt(int slot)
+{
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+  for (int i = 0; i < text.length(); i++)
+    text[i] = 0;
+  tft.fillScreen(BLACK);
+  resetString();
+  textboxPlay();
+  tast_litere();
+  int dif = generate_difficulty();
+  Serial.print(dif);
+  Serial.print('\n');
+  if (first == true)
+  {
+    first = false;
+    display_difficulty("EASY");
+    generateEasyCesar();
+  }
+  else
+  {
+    if (dif == 1)
+    {
+      display_difficulty("EASY");
+      generateEasyCesar();
+    }
+    else if (dif == 2)
+    {
+      display_difficulty("MEDIUM");
+      generateMediumCesar();
+    }
+    else if (dif == 3)
+    {
+      display_difficulty("HARD");
+      generateHardCesar();
+    }
+  }
+  for (int i = 0; i < text.length(); i++)
+  {
+    Serial.print(i);
+    Serial.print(' ');
+    Serial.print(text[i]);
+    Serial.print('\n');
+  }
+
+  displayScore(score);
+  enter_string();
+  GetTastePlayCesarEncrypt(slot);
+}
+
+void GetTastePlayCesarEncrypt(int slot)
+{
+  resetString();
+  while (1)
+  {
+
+    TSPoint p = ts.getPoint();
+
+    // we have some minimum pressure we consider 'valid'
+    // pressure of 0 means no pressing!
+    if (p.z > ts.pressureThreshhold) {
+      Serial.print("X = "); Serial.print(p.x);
+      Serial.print("\tY = "); Serial.print(p.y);
+      Serial.print("\tPressure = "); Serial.println(p.z);
+
+      if (mode == 1)
+      {
+        if (p.x >= 750 && p.x <= 885 && p.y >= 650 && p.y <= 720)
+        {
+          textboxPlay();
+          enter_string();
+          len--;
+          sir[len] = 0;
+          afisare_sir(2);
+        }
+        else if (p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
+        {
+          Serial.print("OK");
+          sir[len] = 0;
+          if (CheckCesarEncrypt() == text.length())
+          {
+            TextVerificareCesarEncrypt(true, 0, slot);
+
+          }
+          else
+          {
+            TextVerificareCesarEncrypt(false, text.length() - CheckCesarEncrypt(), slot);
+          }
+          break;
+        }
+
+        else if (p.x >= 770 && p.x <= 895 && p.y >= 745 && p.y <= 805)
+        {
+          mode = 2;
+
+          tast_cif_simb();
+
+        }
+        else if (p.x >= 280 && p.x <= 595 && p.y >= 830 && p.y <= 895)
+          displayCharPlay(' ');
+        else if (p.y >= 600 && p.y <= 660)
+        {
+          if (p.x >= 190 && p.x <= 240)
+            displayCharPlay('Q');
+          else if (p.x >= 245 && p.x <= 295)
+            displayCharPlay('W');
+          else if (p.x >= 300 && p.x <= 350)
+            displayCharPlay('E');
+          else if (p.x >= 355 && p.x <= 405)
+            displayCharPlay('R');
+          else if (p.x >= 410 && p.x <= 460)
+            displayCharPlay('T');
+          else if (p.x >= 465 && p.x <= 515)
+            displayCharPlay('Y');
+          else if (p.x >= 520 && p.x <= 570)
+            displayCharPlay('U');
+          else if (p.x >= 575 && p.x <= 625)
+            displayCharPlay('I');
+          else if (p.x >= 630 && p.x <= 680)
+            displayCharPlay('O');
+          else if (p.x >= 685 && p.x <= 735)
+            displayCharPlay('P');
+
+        }
+        else if (p.y >= 670 && p.y <= 730)
+        {
+          if (p.x >= 220 && p.x <= 270)
+            displayCharPlay('A');
+          else if (p.x >= 275 && p.x <= 325)
+            displayCharPlay('S');
+          else if (p.x >= 330 && p.x <= 380)
+            displayCharPlay('D');
+          else if (p.x >= 385 && p.x <= 435)
+            displayCharPlay('F');
+          else if (p.x >= 440 && p.x <= 490)
+            displayCharPlay('G');
+          else if (p.x >= 495 && p.x <= 545)
+            displayCharPlay('H');
+          else if (p.x >= 550 && p.x <= 600)
+            displayCharPlay('J');
+          else if (p.x >= 605 && p.x <= 655)
+            displayCharPlay('K');
+          else if (p.x >= 660 && p.x <= 710)
+            displayCharPlay('L');
+        }
+        else if (p.y >= 740 && p.y <= 800)
+        {
+          if (p.x >= 250 && p.x <= 300)
+            displayCharPlay('Z');
+          else if (p.x >= 305 && p.x <= 355)
+            displayCharPlay('X');
+          else if (p.x >= 360 && p.x <= 410)
+            displayCharPlay('C');
+          else if (p.x >= 415 && p.x <= 465)
+            displayCharPlay('V');
+          else if (p.x >= 470 && p.x <= 520)
+            displayCharPlay('B');
+          else if (p.x >= 525 && p.x <= 575)
+            displayCharPlay('N');
+          else if (p.x >= 580 && p.x <= 630)
+            displayCharPlay('M');
+        }
+
+      }
+      else
+      {
+        if (p.x >= 750 && p.x <= 885 && p.y >= 650 && p.y <= 720)
+        {
+          textboxPlay();
+          enter_string();
+          len--;
+          sir[len] = 0;
+          afisare_sir(2);
+        }
+        else if (p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
+        {
+          Serial.print("OK");
+          sir[len] = 0;
+          if (CheckCesarEncrypt() == text.length())
+          {
+            TextVerificareCesarEncrypt(true, 0, slot);
+
+          }
+          else
+          {
+            TextVerificareCesarEncrypt(false, text.length() - CheckCesarEncrypt(), slot);
+          }
+          break;
+        }
+        else if (p.x >= 770 && p.x <= 895 && p.y >= 745 && p.y <= 805)
+        {
+          mode = 1;
+          tast_litere();
+        }
+        else if (p.x >= 280 && p.x <= 595 && p.y >= 830 && p.y <= 895)
+          displayCharPlay(' ');
+        else if (p.y >= 600 && p.y <= 660)
+        {
+          if (p.x >= 190 && p.x <= 240)
+            displayCharPlay('1');
+          else if (p.x >= 245 && p.x <= 295)
+            displayCharPlay('2');
+          else if (p.x >= 300 && p.x <= 350)
+            displayCharPlay('3');
+          else if (p.x >= 355 && p.x <= 405)
+            displayCharPlay('4');
+          else if (p.x >= 410 && p.x <= 460)
+            displayCharPlay('5');
+          else if (p.x >= 465 && p.x <= 515)
+            displayCharPlay('6');
+          else if (p.x >= 520 && p.x <= 570)
+            displayCharPlay('7');
+          else if (p.x >= 575 && p.x <= 625)
+            displayCharPlay('8');
+          else if (p.x >= 630 && p.x <= 680)
+            displayCharPlay('9');
+          else if (p.x >= 685 && p.x <= 735)
+            displayCharPlay('0');
+
+        }
+        else if (p.y >= 670 && p.y <= 730)
+        {
+          if (p.x >= 190 && p.x <= 240)
+            displayCharPlay('@');
+          else if (p.x >= 245 && p.x <= 295)
+            displayCharPlay('.');
+          else if (p.x >= 300 && p.x <= 350)
+            displayCharPlay('$');
+          else if (p.x >= 355 && p.x <= 405)
+            displayCharPlay('_');
+          else if (p.x >= 410 && p.x <= 460)
+            displayCharPlay('&');
+          else if (p.x >= 465 && p.x <= 515)
+            displayCharPlay('-');
+          else if (p.x >= 520 && p.x <= 570)
+            displayCharPlay('+');
+          else if (p.x >= 575 && p.x <= 625)
+            displayCharPlay('(');
+          else if (p.x >= 630 && p.x <= 680)
+            displayCharPlay(')');
+          else if (p.x >= 685 && p.x <= 735)
+            displayCharPlay('/');
+
+        }
+        else if (p.y >= 740 && p.y <= 800)
+        {
+          if (p.x >= 190 && p.x <= 240)
+            displayCharPlay('<');
+          else if (p.x >= 245 && p.x <= 295)
+            displayCharPlay('*');
+          else if (p.x >= 300 && p.x <= 350)
+            displayCharPlay('\'');
+          else if (p.x >= 355 && p.x <= 405)
+            displayCharPlay(':');
+          else if (p.x >= 410 && p.x <= 460)
+            displayCharPlay(';');
+          else if (p.x >= 465 && p.x <= 515)
+            displayCharPlay('!');
+          else if (p.x >= 520 && p.x <= 570)
+            displayCharPlay('?');
+          else if (p.x >= 575 && p.x <= 625)
+            displayCharPlay('=');
+          else if (p.x >= 630 && p.x <= 680)
+            displayCharPlay('%');
+          else if (p.x >= 685 && p.x <= 735)
+            displayCharPlay('>');
+        }
+        else if (p.y >= 810 && p.y <= 870)
+        {
+          if (p.x >= 190 && p.x <= 240)
+            displayCharPlay(',');
+          else if (p.x >= 630 && p.x <= 680)
+          {
+            displayCharPlay('\"');
+          }
+        }
+
+      }
+      if (p.x >= 145 && p.x <= 330 && p.y >= 150 && p.y <= 250)
+      {
+        CypherMenuPlay(slot);
+        break;
+      }
+      else if (p.x >= 780 && p.x <= 915 && p.y >= 595 && p.y <= 645)
+      {
+        smaller = true;
+        if (mode == 1)
+          tast_litere();
+        else
+          tast_cif_simb();
+        textboxPlay();
+        enter_string();
+        afisare_sir(2);
+      }
+    }
+    delay(200);
+  }
+}
+
+String CesarEncrypt(String s)
+{
+  String res;
+  for (int i = 0; i < res.length(); i++)
+    res[i] = '\0';
+  int l = s.length();
+  for (int i = 0; i < l; i++)
+    res.concat((char)((s[i] + 3 - 'A') % 26 + 'A'));
+  return res;
+}
+
+int CheckCesarEncrypt()
+{
+  int nr = 0;
+  String corect = CesarEncrypt(text);
+  for (int i = 0; i < corect.length(); i++)
+    if (corect[i] == sir[i])
+      nr++;
+  return nr;
+}
+
+void TextVerificareCesarEncrypt(bool corect, int gresite, int slot)
+{
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+
+  tft.fillRect(0, 40, 239, 130, CYAN);
+  tft.setCursor(5, 45);
+  tft.setTextSize(2);
+  tft.setTextColor(WHITE);
+  int dif = text.length();
+  if (corect == 1)
+  {
+    tft.print("CORECT!");
+    tft.print('\n');
+    if (dif == 3)
+    {
+      tft.print("+5 XP\n");
+      XP_crnt += 5;
+    }
+    else if (dif == 5)
+    {
+      tft.print("+10 XP\n");
+      XP_crnt += 10;
+    }
+    else if (dif == 10)
+    {
+      tft.print("+20 XP\n");
+      XP_crnt += 20;
+    }
+    tft.print("Scor: +");
+    tft.print(dif * 10);
+    score += dif * 10;
+  }
+  else
+  {
+    tft.print("GRESIT!\n");
+    tft.print("Raspuns corect: ");
+    if (dif == 10)
+      tft.print('\n');
+    tft.print(CesarEncrypt(text));
+    tft.setTextSize(2);
+    tft.print("\nXP: +");
+    tft.print(dif - gresite);
+    XP_crnt += dif - gresite;
+    tft.print("\nScor: ");
+    int scor = 10 * (dif - gresite) - 5 * gresite;
+    if (scor > 0)
+      tft.print("+");
+    tft.print(scor);
+    score += scor;
+  }
+
+  tft.fillRect(85, 135, 70, 30, GRAY);
+  tft.setCursor(95, 143);
+  tft.setTextSize(2);
+  tft.setTextColor(BLUE);
+  tft.print("NEXT");
+
+  while (1)
+  {
+    TSPoint p = ts.getPoint();
+
+    // we have some minimum pressure we consider 'valid'
+    // pressure of 0 means no pressing!
+    if (p.z > ts.pressureThreshhold) {
+      Serial.print("X = "); Serial.print(p.x);
+      Serial.print("\tY = "); Serial.print(p.y);
+      Serial.print("\tPressure = "); Serial.println(p.z);
+      if (p.x >= 420 && p.x <= 650 && p.y >= 490 && p.y <= 555)
+      {
+        if (gresite > dif / 2)
+        {
+          GameOverCesar(slot);
+        }
+        else
+        {
+          PlayCesarEncrypt(slot);
+          break;
+        }
+      }
+    }
+
+  }
+}
+
+void GameOverCesar(int slot)
+{
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+  tft.fillScreen(BLACK);
+  tft.setTextSize(4);
+  tft.setTextColor(RED);
+  tft.setCursor(70, 0);
+  tft.print("GAME      OVER");
+  tft.setTextSize(2);
+  tft.setCursor(0, 90);
+  tft.setTextColor(WHITE);
+  tft.print("Numarul maxim de   caractere gresite  acceptate a fost   depasit!");
+  tft.print("\n\n\nXP: +");
+  tft.print(XP_crnt);
+  tft.print("\nScor: ");
+  tft.print(score);
+
+  tft.fillRect(75, 250, 90, 35, RED);
+  tft.setCursor(100, 257);
+  tft.setTextSize(3);
+  tft.print("OK");
+
+
+
+  profil var;
+  int loc = 4;
+  if (slot == 2)
+    loc += sizeof(var);
+  else if (slot == 3)
+    loc += 2 * sizeof(var);
+  EEPROM.get(loc, var);
+  if (score > var.HighScoreCesar)
+  {
+    var.HighScoreCesar = score;
+    EEPROM.put(loc, var);
+    tft.setCursor(10, 220);
+    tft.setTextSize(2);
+    tft.setTextColor(RED);
+    tft.print("(High Score nou)");
+  }
+  EEPROM.get(loc, var);
+  int lvl = var.Level, xp_lvl = var.XPLevel;
+  if (XP_crnt < 50 + (lvl - 1) * 5)
+  {
+    var.XPLevel += XP_crnt;
+    if (var.XPLevel >= 50 + (lvl - 1) * 5)
+    {
+      var.XPLevel -= 50 + (lvl - 1) * 5;
+      var.Level++;
+      tft.setCursor(120, 183);
+      tft.setTextSize(2);
+      tft.setTextColor(RED);
+      tft.print("Level up!");
+    }
+    EEPROM.put(loc, var);
+  }
+  else
+  {
+    while (XP_crnt >= 50 + (lvl - 1) * 5)
+    {
+      XP_crnt -= 50 + (lvl - 1) * 5;
+      lvl++;
+    } ///cat timp poate creste levelul
+    var.XPLevel += XP_crnt;
+    var.Level = lvl;
+    tft.setCursor(120, 183);
+    tft.setTextSize(2);
+    tft.setTextColor(RED);
+    tft.print("Level up!");
+    EEPROM.put(loc, var);
+  }
+  while (1)
+  {
+    TSPoint p = ts.getPoint();
+
+    // we have some minimum pressure we consider 'valid'
+    // pressure of 0 means no pressing!
+    if (p.z > ts.pressureThreshhold) {
+      Serial.print("X = "); Serial.print(p.x);
+      Serial.print("\tY = "); Serial.print(p.y);
+      Serial.print("\tPressure = "); Serial.println(p.z);
+      if (p.x >= 385 && p.x <= 670 && p.y >= 760 && p.x <= 855)
+      {
+        EcranProfil(slot);
+        break;
+      }
+    }
+
+  }
+}
+
+
+void PlayCesarDecrypt(int slot)
+{
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+  for (int i = 0; i < text.length(); i++)
+    text[i] = 0;
+  tft.fillScreen(BLACK);
+  resetString();
+  textboxPlay();
+  tast_litere();
+  int dif = generate_difficulty();
+  Serial.print(dif);
+  Serial.print('\n');
+  if (first == true)
+  {
+    first = false;
+    display_difficulty("EASY");
+    generateEasyCesar();
+  }
+  else
+  {
+    if (dif == 1)
+    {
+      display_difficulty("EASY");
+      generateEasyCesar();
+    }
+    else if (dif == 2)
+    {
+      display_difficulty("MEDIUM");
+      generateMediumCesar();
+    }
+    else if (dif == 3)
+    {
+      display_difficulty("HARD");
+      generateHardCesar();
+    }
+  }
+  for (int i = 0; i < text.length(); i++)
+  {
+    Serial.print(i);
+    Serial.print(' ');
+    Serial.print(text[i]);
+    Serial.print('\n');
+  }
+
+  displayScore(score);
+  enter_string();
+  GetTastePlayCesarDecrypt(slot);
+}
+
+void GetTastePlayCesarDecrypt(int slot)
+{
+  resetString();
+  while (1)
+  {
+
+    TSPoint p = ts.getPoint();
+
+    // we have some minimum pressure we consider 'valid'
+    // pressure of 0 means no pressing!
+    if (p.z > ts.pressureThreshhold) {
+      Serial.print("X = "); Serial.print(p.x);
+      Serial.print("\tY = "); Serial.print(p.y);
+      Serial.print("\tPressure = "); Serial.println(p.z);
+
+      if (mode == 1)
+      {
+        if (p.x >= 750 && p.x <= 885 && p.y >= 650 && p.y <= 720)
+        {
+          textboxPlay();
+          enter_string();
+          len--;
+          sir[len] = 0;
+          afisare_sir(2);
+        }
+        else if (p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
+        {
+          Serial.print("OK");
+          sir[len] = 0;
+          if (CheckCesarDecrypt() == text.length())
+          {
+            TextVerificareCesarDecrypt(true, 0, slot);
+
+          }
+          else
+          {
+            TextVerificareCesarDecrypt(false, text.length() - CheckCesarDecrypt(), slot);
+          }
+          break;
+        }
+
+        else if (p.x >= 770 && p.x <= 895 && p.y >= 745 && p.y <= 805)
+        {
+          mode = 2;
+
+          tast_cif_simb();
+
+        }
+        else if (p.x >= 280 && p.x <= 595 && p.y >= 830 && p.y <= 895)
+          displayCharPlay(' ');
+        else if (p.y >= 600 && p.y <= 660)
+        {
+          if (p.x >= 190 && p.x <= 240)
+            displayCharPlay('Q');
+          else if (p.x >= 245 && p.x <= 295)
+            displayCharPlay('W');
+          else if (p.x >= 300 && p.x <= 350)
+            displayCharPlay('E');
+          else if (p.x >= 355 && p.x <= 405)
+            displayCharPlay('R');
+          else if (p.x >= 410 && p.x <= 460)
+            displayCharPlay('T');
+          else if (p.x >= 465 && p.x <= 515)
+            displayCharPlay('Y');
+          else if (p.x >= 520 && p.x <= 570)
+            displayCharPlay('U');
+          else if (p.x >= 575 && p.x <= 625)
+            displayCharPlay('I');
+          else if (p.x >= 630 && p.x <= 680)
+            displayCharPlay('O');
+          else if (p.x >= 685 && p.x <= 735)
+            displayCharPlay('P');
+
+        }
+        else if (p.y >= 670 && p.y <= 730)
+        {
+          if (p.x >= 220 && p.x <= 270)
+            displayCharPlay('A');
+          else if (p.x >= 275 && p.x <= 325)
+            displayCharPlay('S');
+          else if (p.x >= 330 && p.x <= 380)
+            displayCharPlay('D');
+          else if (p.x >= 385 && p.x <= 435)
+            displayCharPlay('F');
+          else if (p.x >= 440 && p.x <= 490)
+            displayCharPlay('G');
+          else if (p.x >= 495 && p.x <= 545)
+            displayCharPlay('H');
+          else if (p.x >= 550 && p.x <= 600)
+            displayCharPlay('J');
+          else if (p.x >= 605 && p.x <= 655)
+            displayCharPlay('K');
+          else if (p.x >= 660 && p.x <= 710)
+            displayCharPlay('L');
+        }
+        else if (p.y >= 740 && p.y <= 800)
+        {
+          if (p.x >= 250 && p.x <= 300)
+            displayCharPlay('Z');
+          else if (p.x >= 305 && p.x <= 355)
+            displayCharPlay('X');
+          else if (p.x >= 360 && p.x <= 410)
+            displayCharPlay('C');
+          else if (p.x >= 415 && p.x <= 465)
+            displayCharPlay('V');
+          else if (p.x >= 470 && p.x <= 520)
+            displayCharPlay('B');
+          else if (p.x >= 525 && p.x <= 575)
+            displayCharPlay('N');
+          else if (p.x >= 580 && p.x <= 630)
+            displayCharPlay('M');
+        }
+
+      }
+      else
+      {
+        if (p.x >= 750 && p.x <= 885 && p.y >= 650 && p.y <= 720)
+        {
+          textboxPlay();
+          enter_string();
+          len--;
+          sir[len] = 0;
+          afisare_sir(2);
+        }
+        else if (p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
+        {
+          Serial.print("OK");
+          sir[len] = 0;
+          if (CheckCesarDecrypt() == text.length())
+          {
+            TextVerificareCesarDecrypt(true, 0, slot);
+
+          }
+          else
+          {
+            TextVerificareCesarDecrypt(false, text.length() - CheckCesarDecrypt(), slot);
+          }
+          break;
+        }
+        else if (p.x >= 770 && p.x <= 895 && p.y >= 745 && p.y <= 805)
+        {
+          mode = 1;
+          tast_litere();
+        }
+        else if (p.x >= 280 && p.x <= 595 && p.y >= 830 && p.y <= 895)
+          displayCharPlay(' ');
+        else if (p.y >= 600 && p.y <= 660)
+        {
+          if (p.x >= 190 && p.x <= 240)
+            displayCharPlay('1');
+          else if (p.x >= 245 && p.x <= 295)
+            displayCharPlay('2');
+          else if (p.x >= 300 && p.x <= 350)
+            displayCharPlay('3');
+          else if (p.x >= 355 && p.x <= 405)
+            displayCharPlay('4');
+          else if (p.x >= 410 && p.x <= 460)
+            displayCharPlay('5');
+          else if (p.x >= 465 && p.x <= 515)
+            displayCharPlay('6');
+          else if (p.x >= 520 && p.x <= 570)
+            displayCharPlay('7');
+          else if (p.x >= 575 && p.x <= 625)
+            displayCharPlay('8');
+          else if (p.x >= 630 && p.x <= 680)
+            displayCharPlay('9');
+          else if (p.x >= 685 && p.x <= 735)
+            displayCharPlay('0');
+
+        }
+        else if (p.y >= 670 && p.y <= 730)
+        {
+          if (p.x >= 190 && p.x <= 240)
+            displayCharPlay('@');
+          else if (p.x >= 245 && p.x <= 295)
+            displayCharPlay('.');
+          else if (p.x >= 300 && p.x <= 350)
+            displayCharPlay('$');
+          else if (p.x >= 355 && p.x <= 405)
+            displayCharPlay('_');
+          else if (p.x >= 410 && p.x <= 460)
+            displayCharPlay('&');
+          else if (p.x >= 465 && p.x <= 515)
+            displayCharPlay('-');
+          else if (p.x >= 520 && p.x <= 570)
+            displayCharPlay('+');
+          else if (p.x >= 575 && p.x <= 625)
+            displayCharPlay('(');
+          else if (p.x >= 630 && p.x <= 680)
+            displayCharPlay(')');
+          else if (p.x >= 685 && p.x <= 735)
+            displayCharPlay('/');
+
+        }
+        else if (p.y >= 740 && p.y <= 800)
+        {
+          if (p.x >= 190 && p.x <= 240)
+            displayCharPlay('<');
+          else if (p.x >= 245 && p.x <= 295)
+            displayCharPlay('*');
+          else if (p.x >= 300 && p.x <= 350)
+            displayCharPlay('\'');
+          else if (p.x >= 355 && p.x <= 405)
+            displayCharPlay(':');
+          else if (p.x >= 410 && p.x <= 460)
+            displayCharPlay(';');
+          else if (p.x >= 465 && p.x <= 515)
+            displayCharPlay('!');
+          else if (p.x >= 520 && p.x <= 570)
+            displayCharPlay('?');
+          else if (p.x >= 575 && p.x <= 625)
+            displayCharPlay('=');
+          else if (p.x >= 630 && p.x <= 680)
+            displayCharPlay('%');
+          else if (p.x >= 685 && p.x <= 735)
+            displayCharPlay('>');
+        }
+        else if (p.y >= 810 && p.y <= 870)
+        {
+          if (p.x >= 190 && p.x <= 240)
+            displayCharPlay(',');
+          else if (p.x >= 630 && p.x <= 680)
+          {
+            displayCharPlay('\"');
+          }
+        }
+
+      }
+      if (p.x >= 145 && p.x <= 330 && p.y >= 150 && p.y <= 250)
+      {
+        CypherMenuPlay(slot);
+        break;
+      }
+      else if (p.x >= 780 && p.x <= 915 && p.y >= 595 && p.y <= 645)
+      {
+        smaller = true;
+        if (mode == 1)
+          tast_litere();
+        else
+          tast_cif_simb();
+        textboxPlay();
+        enter_string();
+        afisare_sir(2);
+      }
+    }
+    delay(200);
+  }
+}
+
+String CesarDecrypt(String s)
+{
+  String res;
+  for (int i = 0; i < res.length(); i++)
+    res[i] = '\0';
+  int l = s.length();
+  for (int i = 0; i < l; i++)
+  {
+    if (s[i] >= 'D' && s[i] <= 'Z')
+      res.concat((char)((s[i] - 3 - 'A') % 26 + 'A'));
+    else
+    {
+      switch (s[i])
+      {
+        case 'C': res.concat('Z');
+          break;
+        case 'B': res.concat('Y');
+          break;
+        case 'A': res.concat('X');
+      }
+    }
+  }
+
+  return res;
+}
+
+int CheckCesarDecrypt()
+{
+  int nr = 0;
+  String corect = CesarDecrypt(text);
+  for (int i = 0; i < corect.length(); i++)
+    if (corect[i] == sir[i])
+      nr++;
+  return nr;
+}
+
+void TextVerificareCesarDecrypt(bool corect, int gresite, int slot)
+{
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+
+  tft.fillRect(0, 40, 239, 130, CYAN);
+  tft.setCursor(5, 45);
+  tft.setTextSize(2);
+  tft.setTextColor(WHITE);
+  int dif = text.length();
+  if (corect == 1)
+  {
+    tft.print("CORECT!");
+    tft.print('\n');
+    if (dif == 3)
+    {
+      tft.print("+5 XP\n");
+      XP_crnt += 5;
+    }
+    else if (dif == 5)
+    {
+      tft.print("+10 XP\n");
+      XP_crnt += 10;
+    }
+    else if (dif == 10)
+    {
+      tft.print("+20 XP\n");
+      XP_crnt += 20;
+    }
+    tft.print("Scor: +");
+    tft.print(dif * 10);
+    score += dif * 10;
+  }
+  else
+  {
+    tft.print("GRESIT!\n");
+    tft.print("Raspuns corect: ");
+    if (dif == 10)
+      tft.print('\n');
+    tft.print(CesarDecrypt(text));
+    tft.setTextSize(2);
+    tft.print("\nXP: +");
+    tft.print(dif - gresite);
+    XP_crnt += dif - gresite;
+    tft.print("\nScor: ");
+    int scor = 10 * (dif - gresite) - 5 * gresite;
+    if (scor > 0)
+      tft.print("+");
+    tft.print(scor);
+    score += scor;
+  }
+
+  tft.fillRect(85, 135, 70, 30, GRAY);
+  tft.setCursor(95, 143);
+  tft.setTextSize(2);
+  tft.setTextColor(BLUE);
+  tft.print("NEXT");
+
+  while (1)
+  {
+    TSPoint p = ts.getPoint();
+
+    // we have some minimum pressure we consider 'valid'
+    // pressure of 0 means no pressing!
+    if (p.z > ts.pressureThreshhold) {
+      Serial.print("X = "); Serial.print(p.x);
+      Serial.print("\tY = "); Serial.print(p.y);
+      Serial.print("\tPressure = "); Serial.println(p.z);
+      if (p.x >= 420 && p.x <= 650 && p.y >= 490 && p.y <= 555)
+      {
+        if (gresite > dif / 2)
+        {
+          GameOverCesar(slot);
+        }
+        else
+        {
+          PlayCesarDecrypt(slot);
+          break;
+        }
+      }
+    }
+
+  }
+}
+
+void CryptDecryptMenuHexPlay(int slot)
+{
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+
+  tft.fillRect(0, 0, 239, 160, CYAN);
+  tft.fillRect(0, 160, 239, 160, MAGENTA);
+  tft.setCursor(60, 60);
+  tft.setTextSize(3);
+  tft.setTextColor(RED);
+  tft.print("Encrypt");
+  tft.setCursor(60, 220);
+  tft.print("Decrypt");
+
+  tft.fillRect(170, 295, 60, 20, GREEN);
+  tft.setTextColor(BLACK);
+  tft.setTextSize(2);
+  tft.setCursor(173, 296);
+  tft.print("BACK");
+
+  while (1)
+  {
+    p = ts.getPoint();
+    if (p.z > ts.pressureThreshhold)
+    {
+      Serial.print(p.x);
+      Serial.print(' ');
+      Serial.print(p.y);
+      Serial.print('\n');
+      if (p.x >= 720 && p.x <= 895 && p.y >= 870 && p.y <= 915)
+      {
+        CypherMenuPlay(slot);
+        break;
+      }
+      else if (p.x >= 200 && p.x <= 910 && p.y >= 200 && p.y <= 560)
+      {
+        //PlayHexEncrypt(slot);
+        break;
+      }
+      else if (p.x >= 200 && p.x <= 910 && p.y >= 565 && p.y <= 930)
+      {
+        //PlayHexDecrypt(slot);
+        break;
+      }
+    }
+  }
+}
+
+void CryptDecryptMenuBinaryPlay(int slot)
+{
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+
+  tft.fillRect(0, 0, 239, 160, CYAN);
+  tft.fillRect(0, 160, 239, 160, MAGENTA);
+  tft.setCursor(60, 60);
+  tft.setTextSize(3);
+  tft.setTextColor(RED);
+  tft.print("Encrypt");
+  tft.setCursor(60, 220);
+  tft.print("Decrypt");
+
+  tft.fillRect(170, 295, 60, 20, GREEN);
+  tft.setTextColor(BLACK);
+  tft.setTextSize(2);
+  tft.setCursor(173, 296);
+  tft.print("BACK");
+
+  while (1)
+  {
+    p = ts.getPoint();
+    if (p.z > ts.pressureThreshhold)
+    {
+      Serial.print(p.x);
+      Serial.print(' ');
+      Serial.print(p.y);
+      Serial.print('\n');
+      if (p.x >= 720 && p.x <= 895 && p.y >= 870 && p.y <= 915)
+      {
+        CypherMenuPlay(slot);
+        break;
+      }
+      else if (p.x >= 200 && p.x <= 910 && p.y >= 200 && p.y <= 560)
+      {
+        //PlayBinaryEncrypt(slot);
+        break;
+      }
+      else if (p.x >= 200 && p.x <= 910 && p.y >= 565 && p.y <= 930)
+      {
+        //PlayBinaryDecrypt(slot);
+        break;
+      }
+    }
+  }
+}
+
+void CryptDecryptMenuVigenerePlay(int slot)
+{
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+
+  tft.fillRect(0, 0, 239, 160, CYAN);
+  tft.fillRect(0, 160, 239, 160, MAGENTA);
+  tft.setCursor(60, 60);
+  tft.setTextSize(3);
+  tft.setTextColor(RED);
+  tft.print("Encrypt");
+  tft.setCursor(60, 220);
+  tft.print("Decrypt");
+
+  tft.fillRect(170, 295, 60, 20, GREEN);
+  tft.setTextColor(BLACK);
+  tft.setTextSize(2);
+  tft.setCursor(173, 296);
+  tft.print("BACK");
+
+  while (1)
+  {
+    p = ts.getPoint();
+    if (p.z > ts.pressureThreshhold)
+    {
+      Serial.print(p.x);
+      Serial.print(' ');
+      Serial.print(p.y);
+      Serial.print('\n');
+      if (p.x >= 720 && p.x <= 895 && p.y >= 870 && p.y <= 915)
+      {
+        CypherMenuPlay(slot);
+        break;
+      }
+      else if (p.x >= 200 && p.x <= 910 && p.y >= 200 && p.y <= 560)
+      {
+        //PlayVigenereEncrypt(slot);
+        break;
+      }
+      else if (p.x >= 200 && p.x <= 910 && p.y >= 565 && p.y <= 930)
+      {
+        //PlayVigenereDecrypt(slot);
+        break;
+      }
+    }
+  }
 }
 
 void TastLitereProfil()
@@ -978,8 +2711,8 @@ void textboxPlay()
   pinMode(A1, OUTPUT);
   pinMode(A2, OUTPUT);
 
-  tft.fillRect(0, 70, 239, 100, WHITE);
-  tft.fillRect(0, 25, 239, 40, BLUE);
+  tft.fillRect(0, 100, 239, 70, WHITE);
+  tft.fillRect(0, 55, 239, 40, BLUE);
 
 
 }
@@ -1044,14 +2777,6 @@ void ProfileMenu()
   getTastePlay();
 }
 
-struct profil
-{
-  char username[10], parola[15];
-  int HighScoreMorse = 0, HighScoreCesar = 0, HighScoreHex = 0, HighScoreBinary = 0, HighScoreVigenere = 0, HighScoreAtbash = 0;
-  int Level = 1, XPLevel = 0;
-  int username_len = 0, password_len = 0;
-
-} user[4]; ///3 slot-uri + 1 profil pentru verificare parola
 
 void afisareSirProfil(int slot, bool isPassword)
 {
@@ -1071,7 +2796,7 @@ void afisareSirProfil(int slot, bool isPassword)
     tft.setCursor(5, 143);
     for (int i = 0; i < user[slot - 1].password_len; i++)
       tft.print('*');
-    
+
   }
   else
   {
@@ -1634,14 +3359,14 @@ void StatsMenu(int slot)
 {
   pinMode(A1, OUTPUT);
   pinMode(A2, OUTPUT);
-  
+
   tft.fillScreen(CYAN);
   tft.fillRect(0, 0, 60, 20, RED);
   tft.setTextColor(WHITE);
   tft.setTextSize(2);
   tft.setCursor(5, 5);
   tft.print("BACK");
-  
+
   profil var;
   int loc = 4;
   if (slot == 2)
@@ -1649,7 +3374,7 @@ void StatsMenu(int slot)
   else if (slot == 3)
     loc += 2 * sizeof(var);
   EEPROM.get(loc, var);
-  
+
   tft.setTextSize(3);
   tft.setTextColor(BLACK);
   tft.setCursor(70, 5);
@@ -1685,7 +3410,7 @@ void StatsMenu(int slot)
       }
     }
   }
-  
+
 }
 
 void EcranProfil(int slot)
@@ -1744,12 +3469,12 @@ void EcranProfil(int slot)
         ProfileMenu();
         break;
       }
-      else if(p.y >= 460 && p.y <= 610 && p.x >= 310 && p.x <= 720)
+      else if (p.y >= 460 && p.y <= 610 && p.x >= 310 && p.x <= 720)
       {
-        CypherMenuPlay();
+        CypherMenuPlay(slot);
         break;
       }
-      else if(p.y >= 685 && p.y <= 835 && p.x >= 310 && p.x <= 720)
+      else if (p.y >= 685 && p.y <= 835 && p.x >= 310 && p.x <= 720)
       {
         StatsMenu(slot);
         break;
@@ -1825,7 +3550,7 @@ void GetTasteIntroducereParola(int slot, int mod)
           pinMode(A2, OUTPUT);
           tft.setCursor(5, 143);
           for (int i = 0; i < user[3].password_len; i++)
-              tft.print('*');
+            tft.print('*');
         }
         else if (p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
         {
@@ -1839,7 +3564,7 @@ void GetTasteIntroducereParola(int slot, int mod)
 
           if (strcmp(user[3].parola, var.parola) == 0)
           {
-            if(mod == 1)
+            if (mod == 1)
               EcranProfil(slot);
             else
               DeleteProfile(slot);
@@ -1936,7 +3661,7 @@ void GetTasteIntroducereParola(int slot, int mod)
           pinMode(A2, OUTPUT);
           tft.setCursor(5, 143);
           for (int i = 0; i < user[3].password_len; i++)
-              tft.print('*');
+            tft.print('*');
         }
         else if (p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
         {
@@ -1949,7 +3674,7 @@ void GetTasteIntroducereParola(int slot, int mod)
           EEPROM.get(loc, var);
           if (strcmp(user[3].parola, var.parola) == 0)
           {
-            if(mod == 1)
+            if (mod == 1)
               EcranProfil(slot);
             else
               DeleteProfile(slot);
@@ -2336,7 +4061,7 @@ void GetTasteNewProfile(int slot)
             pinMode(A2, OUTPUT);
             tft.setCursor(5, 143);
             for (int i = 0; i < user[slot - 1].password_len; i++)
-                tft.print('*');
+              tft.print('*');
           }
           else
           {
@@ -2467,7 +4192,7 @@ void GetTasteNewProfile(int slot)
             pinMode(A2, OUTPUT);
             tft.setCursor(5, 143);
             for (int i = 0; i < user[slot - 1].password_len; i++)
-                tft.print('*');
+              tft.print('*');
           }
           else
           {
@@ -2836,7 +4561,7 @@ void tast_cif_simb()
   tft.setTextSize(2);
 }
 
-void afisare_sir()
+void afisare_sir(int mode)
 {
   pinMode(A1, OUTPUT);
   pinMode(A2, OUTPUT);
@@ -2851,7 +4576,10 @@ void afisare_sir()
     tft.setTextSize(1);
   else
     tft.setTextSize(2);
-  tft.setCursor(5, 45);
+  if (mode == 1) //work
+    tft.setCursor(5, 45);
+  else
+    tft.setCursor(5, 105);
   tft.print(sir);
 }
 
@@ -2864,10 +4592,23 @@ void displayChar(char x)
   else
   {
     sir[len++] = x;
-    afisare_sir();
+    afisare_sir(1);
   }
 
 
+}
+
+void displayCharPlay(char x)
+{
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+  if (isVig == true && isKey == true && !litera(x))
+    error_message();
+  else
+  {
+    sir[len++] = x;
+    afisare_sir(2);
+  }
 }
 
 void textbox()
@@ -2940,6 +4681,516 @@ void MorseEncrypt()
 
 }
 
+
+String MorseEncrypt(String s)
+{
+  String result;
+  for (int i = 0; i < result.length(); i++)
+    result[i] = '\0';
+  int l = s.length();
+  for (int i = 0; i < l - 1; i++)
+  {
+    result.concat(morse(s[i]));
+    result.concat(" ");
+  }
+  result.concat(morse(s[l - 1]));
+  return result;
+}
+
+int CheckMorseEncrypt()
+{
+  String correct_answer = MorseEncrypt(text);
+  char correct_answer_char[correct_answer.length() + 10];
+  correct_answer.toCharArray(correct_answer_char, correct_answer.length() + 10);
+  char correct_char[10][10];
+  char answer_char[10][10];
+  int k = 0, l = 0;
+  Serial.print('\n');
+  Serial.print(correct_answer_char);
+  Serial.print('\n');
+  char *p = strtok(correct_answer_char, " ");
+  while (p)
+  {
+    strcpy(correct_char[k++], p);
+    p = strtok(NULL, " ");
+  }
+  p = strtok(sir, " ");
+  while (p)
+  {
+    strcpy(answer_char[l++], p);
+    p = strtok(NULL, " ");
+  }
+  int nr = 0;
+  for (int i = 0; i < k; i++)
+  {
+    Serial.print(correct_char[i]);
+    Serial.print(' ');
+    Serial.print(answer_char[i]);
+    Serial.print('\n');
+    if (strcmp(correct_char[i], answer_char[i]) == 0)
+      nr++;
+
+  }
+
+  Serial.print(nr);
+  return nr;
+
+}
+
+int generate_difficulty()
+{
+  randomSeed(analogRead(A7));
+  return random(1, 4);
+}
+
+
+void PlayMorseEncrypt(int slot)
+{
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+  for (int i = 0; i < text.length(); i++)
+    text[i] = 0;
+  tft.fillScreen(BLACK);
+  resetString();
+  textboxPlay();
+  TastMorseEncryptPlay();
+  int dif = generate_difficulty();
+  Serial.print(dif);
+  Serial.print('\n');
+  if (first == true)
+  {
+    first = false;
+    display_difficulty("EASY");
+    generateEasyMorseEncrypt();
+  }
+  else
+  {
+    if (dif == 1)
+    {
+      display_difficulty("EASY");
+      generateEasyMorseEncrypt();
+    }
+    else if (dif == 2)
+    {
+      display_difficulty("MEDIUM");
+      generateMediumMorseEncrypt();
+    }
+    else if (dif == 3)
+    {
+      display_difficulty("HARD");
+      generateHardMorseEncrypt();
+    }
+  }
+  for (int i = 0; i < text.length(); i++)
+  {
+    Serial.print(i);
+    Serial.print(' ');
+    Serial.print(text[i]);
+    Serial.print('\n');
+  }
+  displayScore(score);
+  enter_string();
+
+  GetTastePlayMorseEncrypt(slot);
+}
+
+void TastMorseEncryptPlay()
+{
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+
+  tft.fillRect(5, 185, 235, 135, BLACK);
+  tft.drawRect(5, 185, 185, 120, YELLOW);
+
+  tft.fillRect(0, 0, 60, 20, RED);
+  tft.setTextColor(WHITE);
+  tft.setTextSize(2);
+  tft.setCursor(5, 5);
+  tft.print("BACK");
+
+  tft.fillRect(195, 280, 40, 30, GRAY);
+  tft.setCursor(200, 285);
+  tft.setTextColor(GREEN);
+  tft.setTextSize(3);
+  tft.print("OK");
+
+  tft.fillRect(195, 200, 40, 30, GRAY);
+  tft.setCursor(200, 205);
+  tft.setTextColor(RED);
+  tft.setTextSize(3);
+  tft.print("<-");
+
+  tft.setCursor(50, 280);
+  tft.setTextColor(BLUE);
+  tft.setTextSize(3);
+  tft.print("SPACE");
+  tft.drawRect(45, 275, 100, 30, YELLOW);
+
+  tft.drawRect(5, 185, 60, 90, YELLOW);
+  tft.drawRect(65, 185, 60, 90, YELLOW);
+  tft.drawRect(125, 185, 65, 90, YELLOW);
+
+  tft.setTextSize(3);
+  tft.setTextColor(WHITE);
+
+  tft.setCursor(25, 210);
+  tft.print('.');
+  tft.setCursor(85, 215);
+  tft.print('-');
+  tft.setCursor(145, 215);
+  tft.print('/');
+
+
+  tft.fillRect(195, 171, 45, 25, GREEN);
+  tft.setTextSize(3);
+  tft.setTextColor(RED);
+  tft.setCursor(210, 173);
+  tft.print('-');
+}
+
+
+void generateEasyMorseEncrypt()
+{
+  randomSeed(analogRead(A7));
+  String s;
+  for (int i = 0; i < s.length(); i++)
+    s[i] = '\0';
+  for (int i = 0; i < 3; i++)
+  {
+    int poz = random(0, 26);
+    s.concat(MorseChars[poz]);
+  }
+  text = s;
+}
+
+void generateMediumMorseEncrypt()
+{
+  randomSeed(analogRead(A7));
+  String s;
+  for (int i = 0; i < s.length(); i++)
+    s[i] = '\0';
+  for (int i = 0; i < 5; i++)
+  {
+    int poz = random(0, 36);
+    s.concat(MorseChars[poz]);
+
+  }
+  text = s;
+}
+
+void generateHardMorseEncrypt()
+{
+  randomSeed(analogRead(A7));
+  String s;
+  for (int i = 0; i < s.length(); i++)
+    s[i] = '\0';
+  for (int i = 0; i < 10; i++)
+  {
+    int poz = random(0, 53);
+    s.concat(MorseChars[poz]);
+  }
+  text = s;
+}
+
+void GetTastePlayMorseEncrypt(int slot)
+{
+  resetString();
+  while (1)
+  {
+
+    TSPoint p = ts.getPoint();
+
+    // we have some minimum pressure we consider 'valid'
+    // pressure of 0 means no pressing!
+    if (p.z > ts.pressureThreshhold) {
+      /**Serial.print("X = "); Serial.print(p.x);
+        Serial.print("\tY = "); Serial.print(p.y);
+        Serial.print("\tPressure = "); Serial.println(p.z); **/
+      if (p.x >= 750 && p.x <= 885 && p.y >= 650 && p.y <= 720)
+      {
+        textboxPlay();
+        enter_string();
+        len--;
+        sir[len] = 0;
+        afisare_sir(2);
+      }
+      else if (p.y >= 580 && p.y <= 810)
+      {
+        if (p.x >= 180 && p.x <= 340)
+          displayCharPlay('.');
+        else if (p.x >= 360 && p.x <= 545)
+          displayCharPlay('-');
+        else if (p.x >= 550 && p.x <= 750)
+          displayCharPlay('/');
+      }
+      else if (p.x >= 280 && p.x <= 595 && p.y >= 830 && p.y <= 895)
+        displayCharPlay(' ');
+      else if (p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
+      {
+        Serial.print("OK");
+        sir[len] = 0;
+        if (CheckMorseEncrypt() == text.length())
+        {
+          TextVerificareMorseEncrypt(true, 0, slot);
+
+        }
+        else
+        {
+          TextVerificareMorseEncrypt(false, text.length() - CheckMorseEncrypt(), slot);
+        }
+        break;
+      }
+
+    }
+    if (p.x >= 145 && p.x <= 330 && p.y >= 150 && p.y <= 250)
+    {
+      CypherMenuWork();
+      break;
+    }
+    else if (p.x >= 780 && p.x <= 915 && p.y >= 595 && p.y <= 645)
+    {
+      smaller = true;
+      TastMorseEncryptPlay();
+      textboxPlay();
+      enter_string();
+      afisare_sir(2);
+    }
+    delay(200);
+  }
+}
+
+void TextVerificareMorseEncrypt(bool corect, int gresite, int slot)
+{
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+
+  tft.fillRect(0, 40, 239, 130, CYAN);
+  tft.setCursor(5, 45);
+  tft.setTextSize(2);
+  tft.setTextColor(WHITE);
+  int dif = text.length();
+  if (corect == 1)
+  {
+    tft.print("CORECT!");
+    tft.print('\n');
+    if (dif == 3)
+    {
+      tft.print("+5 XP\n");
+      XP_crnt += 5;
+    }
+    else if (dif == 5)
+    {
+      tft.print("+10 XP\n");
+      XP_crnt += 10;
+    }
+    else if (dif == 10)
+    {
+      tft.print("+20 XP\n");
+      XP_crnt += 20;
+    }
+    tft.print("Scor: +");
+    tft.print(dif * 10);
+    score += dif * 10;
+  }
+  else
+  {
+    tft.print("GRESIT!\n");
+    tft.print("Raspuns corect: ");
+    if (dif == 10)
+      tft.setTextSize(1);
+    tft.print(MorseEncrypt(text));
+    tft.setTextSize(2);
+    tft.print("\nXP: +");
+    tft.print(dif - gresite);
+    XP_crnt += dif - gresite;
+    tft.print("\nScor: ");
+    int scor = 10 * (dif - gresite) - 5 * gresite;
+    if (scor > 0)
+      tft.print("+");
+    tft.print(scor);
+    score += scor;
+  }
+
+  tft.fillRect(85, 135, 70, 30, GRAY);
+  tft.setCursor(95, 143);
+  tft.setTextSize(2);
+  tft.setTextColor(BLUE);
+  tft.print("NEXT");
+
+  while (1)
+  {
+    TSPoint p = ts.getPoint();
+
+    // we have some minimum pressure we consider 'valid'
+    // pressure of 0 means no pressing!
+    if (p.z > ts.pressureThreshhold) {
+      Serial.print("X = "); Serial.print(p.x);
+      Serial.print("\tY = "); Serial.print(p.y);
+      Serial.print("\tPressure = "); Serial.println(p.z);
+      if (p.x >= 420 && p.x <= 650 && p.y >= 490 && p.y <= 555)
+      {
+        if (gresite > dif / 2)
+        {
+          GameOverMorse(slot);
+        }
+        else
+        {
+          PlayMorseEncrypt(slot);
+          break;
+        }
+      }
+    }
+
+  }
+
+}
+
+void GameOverMorse(int slot)
+{
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+  tft.fillScreen(BLACK);
+  tft.setTextSize(4);
+  tft.setTextColor(RED);
+  tft.setCursor(70, 0);
+  tft.print("GAME      OVER");
+  tft.setTextSize(2);
+  tft.setCursor(0, 90);
+  tft.setTextColor(WHITE);
+  tft.print("Numarul maxim de   caractere gresite  acceptate a fost   depasit!");
+  tft.print("\n\n\nXP: +");
+  tft.print(XP_crnt);
+  tft.print("\nScor: ");
+  tft.print(score);
+
+  tft.fillRect(75, 250, 90, 35, RED);
+  tft.setCursor(100, 257);
+  tft.setTextSize(3);
+  tft.print("OK");
+
+
+
+  profil var;
+  int loc = 4;
+  if (slot == 2)
+    loc += sizeof(var);
+  else if (slot == 3)
+    loc += 2 * sizeof(var);
+  EEPROM.get(loc, var);
+  if (score > var.HighScoreMorse)
+  {
+    var.HighScoreMorse = score;
+    EEPROM.put(loc, var);
+    tft.setCursor(10, 220);
+    tft.setTextSize(2);
+    tft.setTextColor(RED);
+    tft.print("(High Score nou)");
+  }
+  EEPROM.get(loc, var);
+  int lvl = var.Level, xp_lvl = var.XPLevel;
+  if (XP_crnt < 50 + (lvl - 1) * 5)
+  {
+    var.XPLevel += XP_crnt;
+    if (var.XPLevel >= 50 + (lvl - 1) * 5)
+    {
+      var.XPLevel -= 50 + (lvl - 1) * 5;
+      var.Level++;
+      tft.setCursor(120, 183);
+      tft.setTextSize(2);
+      tft.setTextColor(RED);
+      tft.print("Level up!");
+    }
+    EEPROM.put(loc, var);
+  }
+  else
+  {
+    while (XP_crnt >= 50 + (lvl - 1) * 5)
+    {
+      XP_crnt -= 50 + (lvl - 1) * 5;
+      lvl++;
+    } ///cat timp poate creste levelul
+    var.XPLevel += XP_crnt;
+    var.Level = lvl;
+    tft.setCursor(120, 183);
+    tft.setTextSize(2);
+    tft.setTextColor(RED);
+    tft.print("Level up!");
+    EEPROM.put(loc, var);
+  }
+  while (1)
+  {
+    TSPoint p = ts.getPoint();
+
+    // we have some minimum pressure we consider 'valid'
+    // pressure of 0 means no pressing!
+    if (p.z > ts.pressureThreshhold) {
+      Serial.print("X = "); Serial.print(p.x);
+      Serial.print("\tY = "); Serial.print(p.y);
+      Serial.print("\tPressure = "); Serial.println(p.z);
+      if (p.x >= 385 && p.x <= 670 && p.y >= 760 && p.x <= 855)
+      {
+        EcranProfil(slot);
+        break;
+      }
+    }
+
+  }
+}
+
+
+void display_difficulty(String s)
+{
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+
+  tft.setCursor(180, 5);
+  tft.setTextSize(2);
+  if (s == "EASY")
+    tft.setTextColor(GREEN);
+  else if (s == "MEDIUM")
+  {
+    tft.setTextColor(GOLD);
+    tft.setCursor(150, 5);
+  }
+  else if (s == "HARD")
+    tft.setTextColor(RED);
+  tft.print(s);
+}
+
+void enter_string()
+{
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+
+  tft.setCursor(5, 60);
+  if (text.length() > 25)
+    tft.setTextSize(1);
+  else
+    tft.setTextSize(2);
+  tft.setTextColor(WHITE);
+  tft.print(text);
+}
+
+void displayScore(int score)
+{
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+  tft.setTextSize(2);
+  tft.setCursor(5, 30);
+  tft.setTextColor(YELLOW);
+  tft.print("Score: ");
+  tft.print(score);
+}
+
+void ecran_level()
+{
+  textboxPlay();
+  tast_litere();
+  display_difficulty("MEDIUM");
+  displayScore(100);
+  enter_string();
+}
+
 void error_message()
 {
   pinMode(A1, OUTPUT);
@@ -2970,7 +5221,7 @@ void error_message()
       if (p.x >= 420 && p.x <= 650 && p.y >= 490 && p.y <= 555)
       {
         textbox();
-        afisare_sir();
+        afisare_sir(1);
         break;
       }
     }
@@ -3014,11 +5265,12 @@ void GetTasteMorseEncrypt()
           textbox();
           len--;
           sir[len] = 0;
-          afisare_sir();
+          afisare_sir(1);
         }
         else if (p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
         {
           Serial.print("OK");
+          sir[len] = 0;
           MorseEncrypt();
           break;
         }
@@ -3103,7 +5355,7 @@ void GetTasteMorseEncrypt()
           textbox();
           len--;
           sir[len] = 0;
-          afisare_sir();
+          afisare_sir(1);
         }
         else if (p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
         {
@@ -3214,7 +5466,7 @@ void GetTasteMorseEncrypt()
         else
           tast_cif_simb();
         textbox();
-        afisare_sir();
+        afisare_sir(1);
       }
     }
     delay(200);
@@ -3442,7 +5694,7 @@ void GetTasteMorseDecrypt()
         textbox();
         len--;
         sir[len] = 0;
-        afisare_sir();
+        afisare_sir(1);
       }
       else if (p.y >= 580 && p.y <= 810)
       {
@@ -3473,7 +5725,7 @@ void GetTasteMorseDecrypt()
       smaller = true;
       TastMorseDecrypt();
       textbox();
-      afisare_sir();
+      afisare_sir(1);
     }
     delay(200);
   }
@@ -3493,7 +5745,7 @@ void CesarEncrypt()
       sir[i] = (sir[i] + 3 - 'A') % 26 + 'A';
   }
   textbox();
-  afisare_sir();
+  afisare_sir(1);
 
   while (1)
   {
@@ -3516,10 +5768,25 @@ void CesarDecrypt()
   for (int i = 0; sir[i] != 0; i++)
   {
     if (litera(sir[i]))
-      sir[i] = (sir[i] - 3 - 'A') % 26 + 'A';
+    {
+      if (sir[i] >= 'D' && sir[i] <= 'Z')
+        sir[i] = (sir[i] - 3 - 'A') % 26 + 'A';
+      else
+      {
+        switch (sir[i])
+        {
+          case 'C': sir[i] = 'Z';
+            break;
+          case 'B': sir[i] = 'Y';
+            break;
+          case 'A': sir[i] = 'X';
+        }
+      }
+    }
+
   }
   textbox();
-  afisare_sir();
+  afisare_sir(1);
 
   while (1)
   {
@@ -3558,7 +5825,7 @@ void GetTasteCesarEncrypt()
           textbox();
           len--;
           sir[len] = 0;
-          afisare_sir();
+          afisare_sir(1);
         }
         else if (p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
         {
@@ -3647,7 +5914,7 @@ void GetTasteCesarEncrypt()
           textbox();
           len--;
           sir[len] = 0;
-          afisare_sir();
+          afisare_sir(1);
         }
         else if (p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
         {
@@ -3757,7 +6024,7 @@ void GetTasteCesarEncrypt()
         else
           tast_cif_simb();
         textbox();
-        afisare_sir();
+        afisare_sir(1);
       }
     }
     delay(200);
@@ -3786,7 +6053,7 @@ void GetTasteCesarDecrypt()
           textbox();
           len--;
           sir[len] = 0;
-          afisare_sir();
+          afisare_sir(1);
         }
         else if (p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
         {
@@ -3875,7 +6142,7 @@ void GetTasteCesarDecrypt()
           textbox();
           len--;
           sir[len] = 0;
-          afisare_sir();
+          afisare_sir(1);
         }
         else if (p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
         {
@@ -3985,7 +6252,7 @@ void GetTasteCesarDecrypt()
         else
           tast_cif_simb();
         textbox();
-        afisare_sir();
+        afisare_sir(1);
       }
     }
     delay(200);
@@ -4099,7 +6366,7 @@ void GetTasteHexEncrypt()
           textbox();
           len--;
           sir[len] = 0;
-          afisare_sir();
+          afisare_sir(1);
         }
         else if (p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
         {
@@ -4188,7 +6455,7 @@ void GetTasteHexEncrypt()
           textbox();
           len--;
           sir[len] = 0;
-          afisare_sir();
+          afisare_sir(1);
         }
         else if (p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
         {
@@ -4298,7 +6565,7 @@ void GetTasteHexEncrypt()
         else
           tast_cif_simb();
         textbox();
-        afisare_sir();
+        afisare_sir(1);
       }
     }
     delay(200);
@@ -4327,7 +6594,7 @@ void GetTasteHexDecrypt()
           textbox();
           len--;
           sir[len] = 0;
-          afisare_sir();
+          afisare_sir(1);
         }
         else if (p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
         {
@@ -4416,7 +6683,7 @@ void GetTasteHexDecrypt()
           textbox();
           len--;
           sir[len] = 0;
-          afisare_sir();
+          afisare_sir(1);
         }
         else if (p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
         {
@@ -4526,7 +6793,7 @@ void GetTasteHexDecrypt()
         else
           tast_cif_simb();
         textbox();
-        afisare_sir();
+        afisare_sir(1);
       }
     }
     delay(200);
@@ -4636,7 +6903,7 @@ void GetTasteBinaryEncrypt()
           textbox();
           len--;
           sir[len] = 0;
-          afisare_sir();
+          afisare_sir(1);
         }
         else if (p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
         {
@@ -4725,7 +6992,7 @@ void GetTasteBinaryEncrypt()
           textbox();
           len--;
           sir[len] = 0;
-          afisare_sir();
+          afisare_sir(1);
         }
         else if (p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
         {
@@ -4835,7 +7102,7 @@ void GetTasteBinaryEncrypt()
         else
           tast_cif_simb();
         textbox();
-        afisare_sir();
+        afisare_sir(1);
       }
     }
     delay(200);
@@ -4864,7 +7131,7 @@ void GetTasteBinaryDecrypt()
           textbox();
           len--;
           sir[len] = 0;
-          afisare_sir();
+          afisare_sir(1);
         }
         else if (p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
         {
@@ -4953,7 +7220,7 @@ void GetTasteBinaryDecrypt()
           textbox();
           len--;
           sir[len] = 0;
-          afisare_sir();
+          afisare_sir(1);
         }
         else if (p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
         {
@@ -5063,7 +7330,7 @@ void GetTasteBinaryDecrypt()
         else
           tast_cif_simb();
         textbox();
-        afisare_sir();
+        afisare_sir(1);
       }
     }
     delay(200);
@@ -5086,7 +7353,7 @@ void VigenereEncrypt()
     }
 
   }
-  afisare_sir();
+  afisare_sir(1);
 
   while (1)
   {
@@ -5114,7 +7381,7 @@ void Atbash()
   for (int i = 0; sir[i] != 0; i++)
     if (litera(sir[i]))
       sir[i] = 26 - (sir[i] - 'A' + 1) + 'A';
-  afisare_sir();
+  afisare_sir(1);
 
   while (1)
   {
@@ -5168,7 +7435,7 @@ void VigenereDecrypt()
     }
 
   }
-  afisare_sir();
+  afisare_sir(1);
 
   while (1)
   {
@@ -5207,7 +7474,7 @@ void GetTasteAtbash()
           textbox();
           len--;
           sir[len] = 0;
-          afisare_sir();
+          afisare_sir(1);
         }
         else if (p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
         {
@@ -5297,7 +7564,7 @@ void GetTasteAtbash()
           textbox();
           len--;
           sir[len] = 0;
-          afisare_sir();
+          afisare_sir(1);
         }
         else if (p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
         {
@@ -5408,7 +7675,7 @@ void GetTasteAtbash()
         else
           tast_cif_simb();
         textbox();
-        afisare_sir();
+        afisare_sir(1);
       }
     }
     delay(200);
@@ -5445,7 +7712,7 @@ void enter_key()
       if (p.x >= 420 && p.x <= 650 && p.y >= 490 && p.y <= 555)
       {
         textbox();
-        afisare_sir();
+        afisare_sir(1);
         break;
       }
     }
@@ -5483,7 +7750,7 @@ void enter_text()
       if (p.x >= 420 && p.x <= 650 && p.y >= 490 && p.y <= 555)
       {
         textbox();
-        afisare_sir();
+        afisare_sir(1);
         break;
       }
     }
@@ -5517,7 +7784,7 @@ void GetTasteVigenereEncrypt()
           textbox();
           len--;
           sir[len] = 0;
-          afisare_sir();
+          afisare_sir(1);
         }
         else if (p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
         {
@@ -5621,7 +7888,7 @@ void GetTasteVigenereEncrypt()
           textbox();
           len--;
           sir[len] = 0;
-          afisare_sir();
+          afisare_sir(1);
         }
         else if (p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
         {
@@ -5745,7 +8012,7 @@ void GetTasteVigenereEncrypt()
         else
           tast_cif_simb();
         textbox();
-        afisare_sir();
+        afisare_sir(1);
       }
     }
     delay(200);
@@ -5776,7 +8043,7 @@ void GetTasteVigenereDecrypt()
           textbox();
           len--;
           sir[len] = 0;
-          afisare_sir();
+          afisare_sir(1);
         }
         else if (p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
         {
@@ -5880,7 +8147,7 @@ void GetTasteVigenereDecrypt()
           textbox();
           len--;
           sir[len] = 0;
-          afisare_sir();
+          afisare_sir(1);
         }
         else if (p.x >= 775 && p.x <= 890 && p.y >= 830 && p.y <= 905)
         {
@@ -6003,7 +8270,7 @@ void GetTasteVigenereDecrypt()
         else
           tast_cif_simb();
         textbox();
-        afisare_sir();
+        afisare_sir(1);
       }
     }
     delay(200);
@@ -6457,6 +8724,5 @@ void setup() {
 }
 
 void loop() {
-
-
+  
 }
