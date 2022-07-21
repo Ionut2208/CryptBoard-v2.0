@@ -28,3 +28,5 @@ Pentru modurile Work și Wiki nu este nevoie de profil, așa că la apăsarea bu
 In modul Work, se selectează cifrul și modul, apoi se introduce textul. Daca la apăsarea unei taste apare "Caracter neacceptat" înseamnă că acel caracter nu face parte din lista de caractere ce pot fi folosite cu cifrul și/sau modul selectat. După scrierea textului, se apasă "OK", iar pe ecran va apărea textul criptat/decriptat.
 In Modul Wiki, se selectează cifrul, apărând informații despre el și butoane pentru a naviga spre pagina urmatoare, unde este cazul, și butoane de "BACK" ce îl întorc pe utilizator fie la meniul cu cifruri, fie la pagina anterioară legata de acel cifru.
 In toate interfețele din toate modurile exista butoane de "BACK" pentru a-i oferi utilizatorului posibilitatea de a reveni la meniul principal în cazul unei apăsări realizate din greșeală sau pentru a revedea o informație deja prezentată.
+
+Pe viitor, dispozitivul va putea fi îmbunătățit prin conectarea la internet, adăugarea de efecte sonore și îmbunătățirea ecranului din cauza calității mediocre a touch-ului.
