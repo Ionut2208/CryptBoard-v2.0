@@ -29,4 +29,4 @@ In modul Work, se selectează cifrul și modul, apoi se introduce textul. Daca l
 In Modul Wiki, se selectează cifrul, apărând informații despre el și butoane pentru a naviga spre pagina urmatoare, unde este cazul, și butoane de "BACK" ce îl întorc pe utilizator fie la meniul cu cifruri, fie la pagina anterioară legata de acel cifru.
 In toate interfețele din toate modurile exista butoane de "BACK" pentru a-i oferi utilizatorului posibilitatea de a reveni la meniul principal în cazul unei apăsări realizate din greșeală sau pentru a revedea o informație deja prezentată.
 
-Pe viitor, dispozitivul va putea fi îmbunătățit prin conectarea la internet, adăugarea de efecte sonore și îmbunătățirea ecranului din cauza calității mediocre a touch-ului.
+Pe viitor, dispozitivul va putea fi îmbunătățit prin conectarea la internet, adăugarea de efecte sonore și luminoase și îmbunătățirea ecranului din cauza calității mediocre a touch-ului.
