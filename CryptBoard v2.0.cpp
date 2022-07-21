@@ -8710,7 +8710,7 @@ void GetTastePlayMorseEncrypt(int slot)
     }
     if (p.x >= 145 && p.x <= 330 && p.y >= 150 && p.y <= 250)
     {
-      CypherMenuWork();
+      CypherMenuPlay(slot);
       break;
     }
     else if (p.x >= 780 && p.x <= 915 && p.y >= 595 && p.y <= 645)
