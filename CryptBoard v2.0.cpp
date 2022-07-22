@@ -38,6 +38,61 @@ char sir[300], cheie[300];
 int mode = 1, len, len_key;
 bool isKey = true, smaller = false, isVig = false;
 
+void(* resetFunc) (void) = 0;
+
+void resetare()
+{
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+
+  tft.fillRect(0, 40, 239, 130, RED);
+  tft.setCursor(5, 45);
+  tft.setTextSize(2);
+  tft.setTextColor(WHITE);
+  tft.print("Este necesara      repornirea pentru  salvarea/stergerea profilului");
+
+  tft.fillRect(85, 135, 70, 30, GRAY);
+  tft.setCursor(107, 143);
+  tft.setTextSize(2);
+  tft.setTextColor(BLUE);
+  tft.print("OK");
+
+  while (1)
+  {
+    TSPoint p = ts.getPoint();
+
+    // we have some minimum pressure we consider 'valid'
+    // pressure of 0 means no pressing!
+    if (p.z > ts.pressureThreshhold) {
+      Serial.print("X = "); Serial.print(p.x);
+      Serial.print("\tY = "); Serial.print(p.y);
+      Serial.print("\tPressure = "); Serial.println(p.z);
+      if (p.x >= 420 && p.x <= 650 && p.y >= 490 && p.y <= 555)
+      {
+        pinMode(A1, OUTPUT);
+        pinMode(A2, OUTPUT);
+        tft.fillRect(0, 40, 239, 130, RED);
+        tft.setCursor(5, 45);
+        tft.setTextSize(2);
+        tft.setTextColor(WHITE);
+        tft.print("Repornire in ");
+        for (int i = 5; i >= 1; i--)
+        {
+          tft.setCursor(170, 45);
+          tft.print(i);
+          delay(1000);
+          tft.fillRect(165, 40, 20, 20, RED);
+          
+        }
+        resetFunc();
+        break;
+      }
+    }
+
+  }
+
+}
+
 struct profil
 {
   char username[10], parola[15];
@@ -7751,7 +7806,7 @@ void DeleteProfile(int slot)
   }
   for (int i = loc; i < EEPROM.length() && marime; i++, marime--)
     EEPROM.update(i, 0);
-  MeniuStergeProfil();
+  resetare();
 }
 
 
@@ -7867,7 +7922,7 @@ void GetTasteNewProfile(int slot)
               EEPROM.put(loc, user[2]);
               EEPROM.update(2, 1);
             }
-            ProfileMenu();
+            resetare();
             break;
           }
         }
@@ -7996,7 +8051,7 @@ void GetTasteNewProfile(int slot)
               EEPROM.put(loc, user[2]);
               EEPROM.update(2, 1);
             }
-            ProfileMenu();
+            resetare();
             break;
           }
         }
@@ -12490,5 +12545,5 @@ void setup() {
 }
 
 void loop() {
- 
+
 }
